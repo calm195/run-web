@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:32:06
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 10:52:01
+ * @LastEditTime: 2025-11-19 19:42:56
  * @FilePath: src/app/game/component/game-card.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -10,6 +10,17 @@
 import React from 'react';
 import {GameWebViewRsp} from '@/api/model';
 import {formatDateTime} from '@/utils/date';
+import {
+  FaTrophy,
+  FaChess,
+  FaGamepad,
+  FaCalculator,
+  FaRobot,
+  FaComments,
+  FaBriefcase,
+  FaPalette,
+  FaEye
+} from 'react-icons/fa';
 
 interface GameWebViewCardProps {
   game: GameWebViewRsp;
@@ -26,9 +37,16 @@ const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
 
   const getCompetitionIcon = (type: number) => {
     const icons = [
-      '🏆', '♟️', '🎮', '🧮', '🤖', '🗣️', '💼', '🎨'
+      <FaTrophy key="trophy" className="text-yellow-500" />,
+      <FaChess key="chess" className="text-blue-500" />,
+      <FaGamepad key="gamepad" className="text-green-500" />,
+      <FaCalculator key="calculator" className="text-purple-500" />,
+      <FaRobot key="robot" className="text-red-500" />,
+      <FaComments key="comments" className="text-indigo-500" />,
+      <FaBriefcase key="briefcase" className="text-orange-500" />,
+      <FaPalette key="palette" className="text-pink-500" />
     ];
-    return icons[type % icons.length] || '🏆';
+    return icons[type % icons.length] || <FaTrophy key="default" className="text-yellow-500" />;
   };
 
   return (
@@ -65,12 +83,8 @@ const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
         </div>
 
         <div className="card-actions justify-end mt-6">
-          <button className="btn btn-primary btn-sm w-full sm:w-auto">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
+          <button className="btn btn-sm w-full sm:w-auto flex items-center justify-center">
+            <FaEye className="w-4 h-4 mr-1" />
             查看详情
           </button>
         </div>

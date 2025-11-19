@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:35:32
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 10:58:33
+ * @LastEditTime: 2025-11-19 22:14:03
  * @FilePath: src/utils/date.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -37,4 +37,19 @@ export const formatDate = (dateString: string): string => {
   } catch {
     return dateString;
   }
+};
+
+export const parseDate = (dateString: string): Date => {
+  try {
+    return new Date(dateString);
+  } catch {
+    return new Date();
+  }
+};
+
+export const isDateInRange = (dateString: string, startDate?: Date, endDate?: Date): boolean => {
+  const date = parseDate(dateString);
+
+  if (startDate && date < startDate) return false;
+  return !(endDate && date > endDate);
 };

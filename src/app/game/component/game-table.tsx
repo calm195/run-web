@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:39:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 10:53:21
+ * @LastEditTime: 2025-11-19 19:47:24
  * @FilePath: src/app/game/component/game-table.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -29,7 +29,6 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games}) => {
       <table className="table table-zebra w-full">
         <thead>
         <tr>
-          <th>ID</th>
           <th>比赛名称</th>
           <th>类型</th>
           <th>创建时间</th>
@@ -40,9 +39,6 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games}) => {
         <tbody>
         {games.map((game) => (
           <tr key={game.id}>
-            <td>
-              <div className="font-mono text-primary">{game.id}</div>
-            </td>
             <td>
               <div className="font-semibold">{game.name}</div>
             </td>
@@ -63,7 +59,7 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games}) => {
             </td>
             <td>
               <div className="flex gap-2">
-                <button className="btn btn-primary btn-sm">详情</button>
+                <button className="btn btn-accent btn-sm">详情</button>
                 <button className="btn btn-outline btn-sm">编辑</button>
               </div>
             </td>
