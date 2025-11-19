@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:32:06
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 19:42:56
+ * @LastEditTime: 2025-11-19 22:34:32
  * @FilePath: src/app/game/component/game-card.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -54,9 +54,9 @@ const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
       className="card bg-base-100 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
       <div className="card-body p-6">
         <div className="flex justify-between items-start mb-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 truncate">
             <span className="text-2xl">{getCompetitionIcon(game.type)}</span>
-            <h2 className="card-title text-lg font-semibold break-words flex-1">
+            <h2 className="card-title text-lg font-semibold break-words flex-1 truncate" title={game.name}>
               {game.name}
             </h2>
           </div>

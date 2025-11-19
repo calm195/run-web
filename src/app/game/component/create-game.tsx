@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 19:57:40
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 22:06:54
+ * @LastEditTime: 2025-11-19 23:20:49
  * @FilePath: src/app/game/component/create-game.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -22,9 +22,31 @@ interface CreateGameProps {
 const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
   const [formData, setFormData] = useState<GameCreateReq>({
     name: '',
-    type: 0,
+    type: -1,
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    // 验证比赛名称
+    if (!formData.name.trim()) {
+      newErrors.name = '请输入比赛名称';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = '比赛名称至少需要2个字符';
+    } else if (formData.name.trim().length > 50) {
+      newErrors.name = '比赛名称不能超过50个字符';
+    }
+
+    // 验证比赛类型
+    if (formData.type === -1) {
+      newErrors.type = '请选择比赛类型';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -32,10 +54,25 @@ const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
       ...prev,
       [name]: name === 'type' ? Number(value) : value,
     }));
-  }
+
+    // 清除对应字段的错误信息
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 提交前验证
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
       await createGame(formData);
@@ -63,10 +100,10 @@ const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="input input-bordered w-full"
+              className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
               placeholder="请输入比赛名称"
-              required
             />
+            {errors.name && <label className="label"><span className="label-text-alt text-error">{errors.name}</span></label>}
           </div>
 
           <div className="form-control">
@@ -77,14 +114,16 @@ const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
               name="type"
               value={formData.type}
               onChange={handleChange}
-              className="select select-bordered w-full"
+              className={`select select-bordered w-full ${errors.type ? 'select-error' : ''}`}
             >
+              <option value={-1} disabled>请选择比赛类型</option>
               {typeOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
+            {errors.type && <label className="label"><span className="label-text-alt text-error">{errors.type}</span></label>}
           </div>
 
           <div className="modal-action">
