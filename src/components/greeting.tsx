@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 19:28:13
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-17 21:16:04
+ * @LastEditTime: 2025-11-19 09:05:04
  * @FilePath: src/components/greeting.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -13,6 +13,7 @@ import { FaRunning, FaHeart, FaUsers, FaTrophy, FaCalendarAlt } from 'react-icon
 import { GiFinishLine, GiPodium, GiSprint } from 'react-icons/gi';
 import { IoMdTimer } from 'react-icons/io';
 import { SiRunkeeper } from 'react-icons/si';
+import Title from "@/components/title";
 
 const Greeting = () => {
   const features = [
@@ -56,7 +57,7 @@ const Greeting = () => {
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="flex justify-center items-center text-4xl md:text-5xl font-bold my-8"
+        className="flex justify-center items-center text-2xl md:text-5xl font-bold my-8"
       >
         <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-yellow-600 bg-clip-text text-transparent">
           🏃‍♂️ 欢迎来到百鲤跑者协会 🏃‍♀️
@@ -89,9 +90,7 @@ const Greeting = () => {
         className="max-w-4xl mx-auto mb-12"
       >
         <div className="backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
-          <h2 className="text-3xl font-bold text-center mb-6">
-            🌟 关于百鲤跑者协会
-          </h2>
+          <Title text="🌟 关于我们 🌟" />
           <p className="text-lg  text-center leading-relaxed mb-6">
             华工百鲤跑团成立于2025年，是一个充满活力的校园跑步社团 🏃‍♂️
             我们致力于推广健康跑步文化，为热爱运动的同学提供交流平台。
@@ -124,9 +123,7 @@ const Greeting = () => {
 
       {/* 特色功能卡片 */}
       <div className="max-w-6xl mx-auto mb-12">
-        <h3 className="text-3xl font-bold text-center mb-8">
-          🎯 我们的理念
-        </h3>
+        <Title text="🎯 我们的理念 🎯" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
             <motion.div
@@ -153,9 +150,7 @@ const Greeting = () => {
 
       {/* 数据统计 */}
       <div className="max-w-4xl mx-auto mb-12">
-        <h3 className="text-3xl font-bold text-center mb-8">
-          📊 社团数据
-        </h3>
+        <Title text="📊 社团数据 📊" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
             <motion.div
@@ -164,11 +159,9 @@ const Greeting = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ scale: 1.1 }}
-              className="bg-gradient-to-r   rounded-xl p-6 text-center shadow-lg"
+              className="bg-gradient-to-r rounded-xl p-6 text-center shadow-lg"
             >
-              <div className="text-2xl mb-2 flex justify-center">
-                {stat.icon}
-              </div>
+              <div className="text-2xl mb-2 flex justify-center">{stat.icon}</div>
               <div className="text-3xl font-bold">{stat.number}</div>
               <div className="text-sm opacity-90">{stat.label}</div>
             </motion.div>

@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 11:33:59
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-17 21:45:34
+ * @LastEditTime: 2025-11-18 17:30:14
  * @FilePath: src/components/stat/stat-table.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -29,7 +29,7 @@ const StatsTable: React.FC<{ data?: StatData[] }> = ({ data = [] }) => {
 
   return (
     <div className="p-4 w-full">
-      <h1 className="text-5xl font-bold mb-4 text-center">名人榜</h1>
+      <h1 className="text-2xl md:text-5xl font-bold mb-4 text-center">名人榜</h1>
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full">
           {statsData.map((stat, index) => (
