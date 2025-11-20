@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:32:06
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:37:47
+ * @LastEditTime: 2025-11-20 22:08:30
  * @FilePath: src/app/game/component/game-card.tsx
  * @Description: 比赛卡片
  */
@@ -21,6 +21,7 @@ import {
   FaPalette,
   FaEye
 } from 'react-icons/fa';
+import Link from "next/link";
 
 interface GameWebViewCardProps {
   game: GameWebViewRsp;
@@ -83,10 +84,12 @@ const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
         </div>
 
         <div className="card-actions justify-end mt-6">
-          <button className="btn btn-sm w-full sm:w-auto flex items-center justify-center">
-            <FaEye className="w-4 h-4 mr-1"/>
-            查看详情
-          </button>
+          <Link href={`/game/${game.id}?name=${encodeURIComponent(game.name)}`} className="w-full sm:w-auto">
+            <button className="btn btn-sm w-full sm:w-auto flex items-center justify-center">
+              <FaEye className="w-4 h-4 mr-1"/>
+              查看成绩
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -2,24 +2,25 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:39:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 16:45:39
+ * @LastEditTime: 2025-11-20 23:37:52
  * @FilePath: src/app/game/component/game-table.tsx
  * @Description: 比赛表格
  */
 
-import React, { useState } from 'react';
-import { GameWebViewRsp } from '@/api/model';
-import { formatDateTime } from '@/utils/date';
+import React, {useState} from 'react';
+import {GameWebViewRsp} from '@/api/model';
+import {formatDateTime} from '@/utils/date';
 import EditGame from "@/app/game/component/edit-game";
-import { FaExclamationTriangle } from 'react-icons/fa';
+import {FaExclamationTriangle, FaEye} from 'react-icons/fa';
 import {deleteGame} from "@/api/game";
+import Link from "next/link";
 
 interface GameWebViewTableProps {
   games: GameWebViewRsp[];
   onRefresh?: () => void;
 }
 
-const GameWebViewTable: React.FC<GameWebViewTableProps> = ({ games, onRefresh }) => {
+const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games, onRefresh}) => {
   const getTypeBadgeColor = (type: number) => {
     const colors = [
       'badge-primary', 'badge-secondary', 'badge-accent',
@@ -111,7 +112,12 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({ games, onRefresh })
               </td>
               <td>
                 <div className="flex gap-2">
-                  <button className="btn btn-accent btn-sm">详情</button>
+                  <Link href={`/game/${game.id}?name=${encodeURIComponent(game.name)}`} className="w-full sm:w-auto">
+                    <button className="btn btn-sm w-full sm:w-auto flex items-center justify-center">
+                      <FaEye className="w-4 h-4 mr-1"/>
+                      查看成绩
+                    </button>
+                  </Link>
                   <button
                     className="btn btn-outline btn-sm"
                     onClick={() => handleEdit(game)}
@@ -146,7 +152,7 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({ games, onRefresh })
       <dialog id="delete_confirmation_modal" className={`modal ${isDeleteModalOpen ? 'modal-open' : ''}`}>
         <div className="modal-box">
           <h3 className="font-bold text-lg flex items-center gap-2">
-            <FaExclamationTriangle className="text-yellow-500" />
+            <FaExclamationTriangle className="text-yellow-500"/>
             确认删除
           </h3>
           <p className="py-4">

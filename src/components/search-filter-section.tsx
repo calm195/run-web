@@ -2,17 +2,18 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 22:51:41
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:47:02
+ * @LastEditTime: 2025-11-20 23:27:49
  * @FilePath: src/components/search-filter-section.tsx
  * @Description: 搜索框
  */
 import {FiCalendar, FiGrid, FiList, FiRefreshCw, FiX} from "react-icons/fi";
 import React from "react";
+import {DateRange} from "@/utils/time";
 
 interface SearchFilterSectionProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
-  dateRange: { start: string; end: string };
+  dateRange: DateRange;
   onDateChange: (field: 'start' | 'end', value: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;

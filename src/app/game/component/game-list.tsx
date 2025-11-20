@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:36:38
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 15:39:53
+ * @LastEditTime: 2025-11-20 23:33:37
  * @FilePath: src/app/game/component/game-list.tsx
  * @Description: 比赛列表
  */
@@ -21,6 +21,7 @@ import LoadingState from "@/components/loading-state";
 import {FaPlus} from "react-icons/fa6";
 import ActiveFiltersDisplay from "@/components/active-filters-display";
 import SearchFilterSection from "@/components/search-filter-section";
+import {DateRange, emptyDateRange, newDateChange} from "@/utils/time";
 
 const GameWebViewList = () => {
   const [games, setGames] = useState<GameWebViewRsp[]>([]);
@@ -28,10 +29,7 @@ const GameWebViewList = () => {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [searchTerm, setSearchTerm] = useState('');
-  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
-    start: '',
-    end: ''
-  });
+  const [dateRange, setDateRange] = useState<DateRange>(emptyDateRange);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
@@ -86,21 +84,12 @@ const GameWebViewList = () => {
     : [];
 
   const handleDateChange = (field: 'start' | 'end', value: string) => {
-    if (field === 'start' && dateRange.end && value > dateRange.end) {
-      return; // 开始日期不能晚于结束日期
-    }
-    if (field === 'end' && dateRange.start && value < dateRange.start) {
-      return; // 结束日期不能早于开始日期
-    }
-    setDateRange(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setDateRange(prevState => (newDateChange(prevState, field, value)));
   };
 
   const clearFilters = () => {
     setSearchTerm('');
-    setDateRange({start: '', end: ''});
+    setDateRange(emptyDateRange);
   };
 
   const hasActiveFilters = searchTerm || dateRange.start || dateRange.end;
