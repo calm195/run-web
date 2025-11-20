@@ -2,12 +2,12 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-18 17:59:08
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-18 18:00:18
+ * @LastEditTime: 2025-11-20 14:41:08
  * @FilePath: src/components/title.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-const Title = ({ text }: { text: string }) => {
+const Title = ({text}: { text: string }) => {
   return (
     <h1 className="text-2xl md:text-4xl font-bold text-center mb-8">{text}</h1>
   );

@@ -2,11 +2,11 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 22:51:41
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 23:13:36
+ * @LastEditTime: 2025-11-20 14:47:02
  * @FilePath: src/components/search-filter-section.tsx
- * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
+ * @Description: 搜索框
  */
-import {FiCalendar, FiGrid, FiList, FiRefreshCw, FiSearch, FiX} from "react-icons/fi";
+import {FiCalendar, FiGrid, FiList, FiRefreshCw, FiX} from "react-icons/fi";
 import React from "react";
 
 interface SearchFilterSectionProps {
@@ -36,16 +36,12 @@ const SearchFilterSection: React.FC<SearchFilterSectionProps> = ({
                                                                    onRefresh,
                                                                    loading
                                                                  }) => {
-  // 当前搜索和过滤区域的JSX代码
   return (
     <div className="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 搜索框 */}
-        <div className="flex flex-col gap-3">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <FiSearch className="text-gray-400"/>
-            </div>
+        <div className="flex items-center flex-col gap-3">
+          <div className="relative max-w-2xl w-full">
             <input
               type="text"
               placeholder="搜索比赛名称或类型..."

@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 12:04:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-16 14:12:23
+ * @LastEditTime: 2025-11-20 14:41:08
  * @FilePath: src/components/icp-info.tsx
  * @Description: ICP 备案信息组件
  */
@@ -14,7 +14,7 @@ interface IcpProp {
   link?: string;
 }
 
-const IcpInfo: React.FC<IcpProp> = ({ icpInfo, link }) => {
+const IcpInfo: React.FC<IcpProp> = ({icpInfo, link}) => {
 
   icpInfo = icpInfo || "粤ICP备2025460136号-1";
   link = link || "https://beian.miit.gov.cn/";

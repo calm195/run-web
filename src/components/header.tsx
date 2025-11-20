@@ -2,18 +2,18 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 15:23:52
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-18 17:56:14
+ * @LastEditTime: 2025-11-20 14:41:08
  * @FilePath: src/components/header.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 import ThemeController from "@/components/theme-controller";
 import Link from "next/link";
-import { AiOutlineMenu, AiOutlineSearch } from 'react-icons/ai';
+import {AiOutlineMenu, AiOutlineSearch} from 'react-icons/ai';
 
 const menuItems = [
-  { href: "/schedule", label: "课表" },
-  { href: "/pace", label: "成绩" },
-  { href: "/game", label: "比赛" },
+  {href: "/schedule", label: "课表"},
+  {href: "/pace", label: "成绩"},
+  {href: "/game", label: "比赛"},
 ];
 
 const Header = () => {
@@ -22,7 +22,7 @@ const Header = () => {
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle lg:hidden">
-            <AiOutlineMenu className="h-5 w-5" />
+            <AiOutlineMenu className="h-5 w-5"/>
           </div>
           <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
             {menuItems.map((item) => (
@@ -53,7 +53,7 @@ const Header = () => {
       </div>
       <div className="navbar-end">
         <button className="btn btn-ghost btn-circle">
-          <AiOutlineSearch className="h-5 w-5" />
+          <AiOutlineSearch className="h-5 w-5"/>
         </button>
         <ThemeController/>
       </div>

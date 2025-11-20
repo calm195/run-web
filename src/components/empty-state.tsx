@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 22:25:30
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 23:20:49
+ * @LastEditTime: 2025-11-20 14:41:08
  * @FilePath: src/components/empty-state.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -12,7 +12,7 @@ interface EmptyStateProps {
   onClearFilters: () => void;
 }
 
-const EmptyState: React.FC<EmptyStateProps> = ({ onClearFilters }) => {
+const EmptyState: React.FC<EmptyStateProps> = ({onClearFilters}) => {
   return (
     <div className="text-center py-16 bg-base-100 rounded-xl shadow-lg">
       <div className="text-6xl mb-4">🏆</div>

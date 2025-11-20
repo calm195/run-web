@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 12:10:19
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-17 19:46:31
+ * @LastEditTime: 2025-11-20 14:41:08
  * @FilePath: src/components/footer.tsx
  * @Description: 页脚组件
  */
@@ -18,7 +18,7 @@ const Footer = () => {
       <footer className="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
         <aside>
           <p>Copyright © {new Date().getFullYear()} - All right reserved by kurous</p>
-          <IcpInfo />
+          <IcpInfo/>
         </aside>
       </footer>
     </>

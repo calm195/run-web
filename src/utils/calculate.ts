@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 19:10:02
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 22:13:23
+ * @LastEditTime: 2025-11-20 09:44:49
  * @FilePath: src/utils/calculate.ts
  * @Description: 计算工具函数
  */
@@ -44,14 +44,3 @@ export const generateExampleData = (count: number = 14) => {
 
   return statsData;
 };
-
-export const typeOptions = [
-  { value: 1, label: '编程竞赛' },
-  { value: 2, label: '智力竞赛' },
-  { value: 3, label: '电竞比赛' },
-  { value: 4, label: '学术竞赛' },
-  { value: 5, label: '工程竞赛' },
-  { value: 6, label: '语言竞赛' },
-  { value: 7, label: '商业竞赛' },
-  { value: 8, label: '设计竞赛' }
-];

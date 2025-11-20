@@ -2,9 +2,9 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:39:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 19:47:24
+ * @LastEditTime: 2025-11-20 14:37:47
  * @FilePath: src/app/game/component/game-table.tsx
- * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
+ * @Description: 比赛表格
  */
 
 import React from 'react';

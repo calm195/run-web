@@ -2,12 +2,12 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 10:16:57
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-18 17:04:47
+ * @LastEditTime: 2025-11-20 14:41:08
  * @FilePath: src/app/layout.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import type { Metadata } from "next";
+import type {Metadata} from "next";
 import "./globals.css";
 import React from "react";
 import Footer from "@/components/footer";
@@ -19,19 +19,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="ch-CN">
-      <body>
-        <Header />
-        <main>
-          {children}
-        </main>
-        <Footer />
-      </body>
+    <body>
+    <Header/>
+    <main>
+      {children}
+    </main>
+    <Footer/>
+    </body>
     </html>
   );
 }

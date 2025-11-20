@@ -2,9 +2,9 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:36:38
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 23:20:49
+ * @LastEditTime: 2025-11-20 14:37:47
  * @FilePath: src/app/game/component/game-list.tsx
- * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
+ * @Description: 比赛列表
  */
 'use client';
 
@@ -58,12 +58,10 @@ const GameWebViewList = () => {
 
     let startDate: Date | undefined;
     let endDate: Date | undefined;
-
     if (start) {
       startDate = new Date(start);
       startDate.setHours(0, 0, 0, 0); // 设置为当天开始时间
     }
-
     if (end) {
       endDate = new Date(end);
       endDate.setHours(23, 59, 59, 999); // 设置为当天结束时间
@@ -76,8 +74,8 @@ const GameWebViewList = () => {
   };
 
   // 搜索和时间过滤
-  const filteredGameWebViews = Array.isArray(games)
-    ? games
+  const filteredGameWebViews = Array.isArray(games) ?
+    games
       .filter(game =>
         game.name.includes(searchTerm) ||
         game.type_name.includes(searchTerm)
@@ -135,7 +133,7 @@ const GameWebViewList = () => {
             className="btn flex items-center justify-center min-w-fit"
             onClick={() => setShowCreateForm(true)}
           >
-            <FaPlus className="w-5 h-5 mr-2" />
+            <FaPlus className="w-5 h-5 mr-2"/>
             添加比赛
           </button>
         </div>
@@ -157,7 +155,7 @@ const GameWebViewList = () => {
           totalItems={filteredGameWebViews.length}
           onRefresh={fetchGames}
           loading={loading}
-          />
+        />
 
         {/* 当前过滤条件显示 */}
         <ActiveFiltersDisplay
@@ -167,7 +165,7 @@ const GameWebViewList = () => {
           onDateStartClear={() => setDateRange(prev => ({...prev, start: ''}))}
           onDateEndClear={() => setDateRange(prev => ({...prev, end: ''}))}
           hasActiveFilters={hasActiveFilters !== ''}
-          />
+        />
       </div>
 
       {/* 加载状态 */}
