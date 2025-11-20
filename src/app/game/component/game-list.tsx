@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:36:38
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:37:47
+ * @LastEditTime: 2025-11-20 15:39:53
  * @FilePath: src/app/game/component/game-list.tsx
  * @Description: 比赛列表
  */
@@ -184,7 +184,10 @@ const GameWebViewList = () => {
             </div>
           ) : Array.isArray(filteredGameWebViews) ? (
             <div className="bg-base-100 rounded-xl shadow-lg overflow-hidden">
-              <GameWebViewTable games={filteredGameWebViews}/>
+              <GameWebViewTable
+                games={filteredGameWebViews}
+                onRefresh={fetchGames}
+              />
             </div>
           ) : (
             <div className="text-center py-12 bg-base-100 rounded-lg">
