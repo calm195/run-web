@@ -7,24 +7,24 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import Stat from "@/components/stat";
-import {Suspense} from "react";
-import StatTable from "@/components/stat/stat-table";
-import Greeting from "@/components/greeting";
-import LoadingState from "@/components/loading-state";
+import Stat from '@/components/stat';
+import { Suspense } from 'react';
+import StatTable from '@/components/stat/stat-table';
+import Greeting from '@/components/greeting';
+import LoadingState from '@/components/loading-state';
 
 export default function Home() {
   return (
     <>
-      <Greeting/>
-      <Suspense fallback={<LoadingState/>}>
+      <Greeting />
+      <Suspense fallback={<LoadingState />}>
         <div className="flex">
-          <StatTable/>
+          <StatTable />
         </div>
       </Suspense>
-      <Suspense fallback={<LoadingState/>}>
+      <Suspense fallback={<LoadingState />}>
         <div className="flex">
-          <Stat/>
+          <Stat />
         </div>
       </Suspense>
     </>

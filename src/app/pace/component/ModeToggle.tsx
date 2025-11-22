@@ -7,14 +7,14 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import {FC} from 'react';
+import { FC } from 'react';
 
 interface ModeToggleProps {
   mode: 'timeToPace' | 'paceToTime';
   onModeChange: (mode: 'timeToPace' | 'paceToTime') => void;
 }
 
-const ModeToggle: FC<ModeToggleProps> = ({mode, onModeChange}) => {
+const ModeToggle: FC<ModeToggleProps> = ({ mode, onModeChange }) => {
   return (
     <div className="tabs tabs-boxed mb-4">
       <button

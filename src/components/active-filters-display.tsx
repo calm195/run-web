@@ -8,8 +8,8 @@
  */
 'use client';
 
-import React from "react";
-import {FiX} from "react-icons/fi";
+import React from 'react';
+import { FiX } from 'react-icons/fi';
 
 interface ActiveFiltersDisplayProps {
   searchTerm: string;
@@ -21,13 +21,13 @@ interface ActiveFiltersDisplayProps {
 }
 
 const ActiveFiltersDisplay: React.FC<ActiveFiltersDisplayProps> = ({
-                                                                     searchTerm,
-                                                                     dateRange,
-                                                                     onSearchClear,
-                                                                     onDateStartClear,
-                                                                     onDateEndClear,
-                                                                     hasActiveFilters
-                                                                   }) => {
+  searchTerm,
+  dateRange,
+  onSearchClear,
+  onDateStartClear,
+  onDateEndClear,
+  hasActiveFilters,
+}) => {
   if (!hasActiveFilters) return null;
 
   return (
@@ -35,8 +35,11 @@ const ActiveFiltersDisplay: React.FC<ActiveFiltersDisplayProps> = ({
       {searchTerm && (
         <div className="badge badge-lg flex items-center gap-2">
           <span>搜索: {searchTerm}</span>
-          <button onClick={onSearchClear} className="btn btn-xs btn-circle btn-ghost">
-            <FiX/>
+          <button
+            onClick={onSearchClear}
+            className="btn btn-xs btn-circle btn-ghost"
+          >
+            <FiX />
           </button>
         </div>
       )}
@@ -47,7 +50,7 @@ const ActiveFiltersDisplay: React.FC<ActiveFiltersDisplayProps> = ({
             onClick={onDateStartClear}
             className="btn btn-xs btn-circle btn-ghost"
           >
-            <FiX/>
+            <FiX />
           </button>
         </div>
       )}
@@ -58,7 +61,7 @@ const ActiveFiltersDisplay: React.FC<ActiveFiltersDisplayProps> = ({
             onClick={onDateEndClear}
             className="btn btn-xs btn-circle btn-ghost"
           >
-            <FiX/>
+            <FiX />
           </button>
         </div>
       )}

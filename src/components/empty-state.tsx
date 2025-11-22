@@ -6,13 +6,13 @@
  * @FilePath: src/components/empty-state.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import React from "react";
+import React from 'react';
 
 interface EmptyStateProps {
   onClearFilters: () => void;
 }
 
-const EmptyState: React.FC<EmptyStateProps> = ({onClearFilters}) => {
+const EmptyState: React.FC<EmptyStateProps> = ({ onClearFilters }) => {
   return (
     <div className="text-center py-16 bg-base-100 rounded-xl shadow-lg">
       <div className="text-6xl mb-4">🏆</div>

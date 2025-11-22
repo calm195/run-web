@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import {FiRefreshCw, FiAlertTriangle} from 'react-icons/fi';
+import { FiRefreshCw, FiAlertTriangle } from 'react-icons/fi';
 
 interface ErrorDisplayProps {
   message: string;
@@ -17,19 +17,19 @@ interface ErrorDisplayProps {
 }
 
 const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
-                                                     message,
-                                                     onRetry,
-                                                     retryText = '重试'
-                                                   }) => {
+  message,
+  onRetry,
+  retryText = '重试',
+}) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="card bg-base-100 shadow-xl w-full max-w-md">
         <div className="card-body text-center">
           <div className="text-red-500 text-5xl mb-4 flex justify-center">
-            <FiAlertTriangle className="text-red-500"/>
+            <FiAlertTriangle className="text-red-500" />
           </div>
           <h2 className="card-title text-xl flex items-center justify-center gap-2">
-            <FiAlertTriangle className="text-red-500"/>
+            <FiAlertTriangle className="text-red-500" />
             加载失败
           </h2>
           <p className="text-gray-600">{message}</p>
@@ -39,7 +39,7 @@ const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
                 onClick={onRetry}
                 className="btn btn-primary flex items-center gap-2"
               >
-                <FiRefreshCw className="animate-spin"/>
+                <FiRefreshCw className="animate-spin" />
                 {retryText}
               </button>
             </div>

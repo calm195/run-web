@@ -6,12 +6,12 @@
  * @FilePath: src/app/game/[id]/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import type {Metadata} from 'next';
-import {listRecordResults} from '@/api/record';
+import type { Metadata } from 'next';
+import { listRecordResults } from '@/api/record';
 import GameRecordsClient from '@/app/game/[id]/GameRecordsClient';
-import {getGame, listGames} from "@/api/game";
-import NotFound from "@/app/not-found";
-import {GameWebViewRsp, ResponseData} from "@/api/model";
+import { getGame, listGames } from '@/api/game';
+import NotFound from '@/app/not-found';
+import { GameWebViewRsp, ResponseData } from '@/api/model';
 
 // 启用 ISR：每 60 秒在后台重新生成页面（按需更新）
 export const revalidate = 60;
@@ -23,7 +23,7 @@ let cachedGamesPromise: Promise<ResponseData<GameWebViewRsp[]>> | null = null;
 
 function getCachedGames() {
   if (!cachedGamesPromise) {
-    cachedGamesPromise = listGames().catch((err) => {
+    cachedGamesPromise = listGames().catch(err => {
       console.warn('Failed to fetch games for static generation:', err);
       return {
         code: -1,
@@ -38,16 +38,20 @@ function getCachedGames() {
 export async function generateStaticParams() {
   const res = await getCachedGames();
   const games = res.data || [];
-  return games.map((game) => ({
+  return games.map(game => ({
     id: String(game.id),
   }));
 }
 
-export async function generateMetadata({params}: { params: Promise<{ id: string }> }): Promise<Metadata>  {
-  const {id} = await params;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
   const gameId = Number(id);
 
-  const gameRes = await getGame({id: gameId});
+  const gameRes = await getGame({ id: gameId });
 
   if (gameRes.code !== 0 || !gameRes.data) {
     return {
@@ -68,14 +72,18 @@ export async function generateMetadata({params}: { params: Promise<{ id: string 
   };
 }
 
-export default async function GamePage({params}: { params: Promise<{ id: string }>  }) {
-  const {id} = await params;
+export default async function GamePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   const gameId = Number(id);
   if (isNaN(gameId)) NotFound();
 
   const [gameRes, recordsRes] = await Promise.all([
-    getGame({id: gameId}),
-    listRecordResults({id: gameId}),
+    getGame({ id: gameId }),
+    listRecordResults({ id: gameId }),
   ]);
 
   if (gameRes.code !== 0 || !gameRes.data) {

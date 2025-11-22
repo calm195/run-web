@@ -7,20 +7,19 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import {Metadata} from "next";
-import PaceCalculator from "@/app/pace/PaceCalculator";
+import { Metadata } from 'next';
+import PaceCalculator from '@/app/pace/PaceCalculator';
 
 export const metadata: Metadata = {
   title: '配速计算器',
   description: '跑步配速与时间换算工具，支持毫秒精度',
 };
 
-
 export default function PacePage() {
   return (
     <div className="min-h-screen bg-base-100 py-8 px-4">
       <div className="max-w-3xl mx-auto">
-        <PaceCalculator/>
+        <PaceCalculator />
       </div>
     </div>
   );

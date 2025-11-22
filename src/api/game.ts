@@ -6,28 +6,37 @@
  * @FilePath: src/api/game.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import {DeleteReq, GameCreateReq, GameEditReq, GameWebViewRsp, GetReq, ResponseData} from "@/api/model";
-import request from "@/utils/request";
+import {
+  DeleteReq,
+  GameCreateReq,
+  GameEditReq,
+  GameWebViewRsp,
+  GetReq,
+  ResponseData,
+} from '@/api/model';
+import request from '@/utils/request';
 
 export async function listGames() {
-  return request.get<ResponseData<GameWebViewRsp[]>>("/run/game/list", {cacheTime: 60});
+  return request.get<ResponseData<GameWebViewRsp[]>>('/run/game/list', {
+    cacheTime: 60,
+  });
 }
 
 export async function getGame(gameId: GetReq) {
-  return request.get<ResponseData<GameWebViewRsp>>("/run/game/get", {
+  return request.get<ResponseData<GameWebViewRsp>>('/run/game/get', {
     params: gameId,
-    cacheTime: 60
+    cacheTime: 60,
   });
 }
 
 export async function createGame(data: GameCreateReq) {
-  return request.post<ResponseData<null>>("/run/game/create", {params: data});
+  return request.post<ResponseData<null>>('/run/game/create', { params: data });
 }
 
 export async function editGame(data: GameEditReq) {
-  return request.put<ResponseData<null>>("/run/game/edit", {params: data});
+  return request.put<ResponseData<null>>('/run/game/edit', { params: data });
 }
 
 export async function deleteGame(id: DeleteReq) {
-  return request.delete<ResponseData<null>>("/run/game/delete", {params: id});
+  return request.delete<ResponseData<null>>('/run/game/delete', { params: id });
 }

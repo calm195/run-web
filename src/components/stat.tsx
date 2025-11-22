@@ -30,7 +30,7 @@ const Stat = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default Stat;

@@ -6,12 +6,12 @@
  * @FilePath: src/components/stat/stat-table.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import StatItem from "@/components/stat/stat-item";
-import React, {useMemo} from 'react';
-import {generateExampleData} from "@/utils/calculate";
-import Title from "@/components/title";
+import StatItem from '@/components/stat/stat-item';
+import React, { useMemo } from 'react';
+import { generateExampleData } from '@/utils/calculate';
+import Title from '@/components/title';
 
-const StatsTable: React.FC<{ data?: StatData[] }> = ({data = []}) => {
+const StatsTable: React.FC<{ data?: StatData[] }> = ({ data = [] }) => {
   // 如果没有传入数据，则使用默认示例数据
   const statsData: StatData[] = useMemo(() => {
     if (data.length > 0) return data;
@@ -30,11 +30,11 @@ const StatsTable: React.FC<{ data?: StatData[] }> = ({data = []}) => {
 
   return (
     <div className="p-4 w-full">
-      <Title text={"名人榜"}/>
+      <Title text={'名人榜'} />
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full">
           {statsData.map((stat, index) => (
-            <StatItem key={index} stat={stat}/>
+            <StatItem key={index} stat={stat} />
           ))}
         </div>
       </div>

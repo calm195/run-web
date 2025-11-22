@@ -6,18 +6,16 @@
  * @FilePath: src/components/theme-controller.tsx
  * @Description: 主题切换组件 - 日间模式 -> retro / 夜间模式 -> luxury
  */
-import {FaChevronDown} from 'react-icons/fa';
+import { FaChevronDown } from 'react-icons/fa';
 
 const ThemeController = () => {
   return (
     <div className="dropdown">
       <div tabIndex={0} role="button" className="btn m-1">
         Theme
-        <FaChevronDown className="h-2 w-2 opacity-60 ml-1"/>
+        <FaChevronDown className="h-2 w-2 opacity-60 ml-1" />
       </div>
-      <ul
-        className="dropdown-content bg-base-300 z-[1] w-52 p-2"
-      >
+      <ul className="dropdown-content bg-base-300 z-[1] w-52 p-2">
         <li>
           <input
             type="radio"

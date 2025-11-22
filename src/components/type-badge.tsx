@@ -12,20 +12,21 @@ interface TypeBadgeProps {
   name: string;
 }
 
-const TypeBadge = ({type, name}: TypeBadgeProps) => {
+const TypeBadge = ({ type, name }: TypeBadgeProps) => {
   const getTypeBadgeColor = (type: number) => {
     const colors = [
-      'badge-primary', 'badge-secondary', 'badge-accent',
-      'badge-info', 'badge-success', 'badge-warning', 'badge-error'
+      'badge-primary',
+      'badge-secondary',
+      'badge-accent',
+      'badge-info',
+      'badge-success',
+      'badge-warning',
+      'badge-error',
     ];
     return colors[type % colors.length] || 'badge-neutral';
   };
 
-  return (
-    <div className={`badge ${getTypeBadgeColor(type)}`}>
-      {name}
-    </div>
-  )
-}
+  return <div className={`badge ${getTypeBadgeColor(type)}`}>{name}</div>;
+};
 
 export default TypeBadge;

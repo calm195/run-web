@@ -8,8 +8,8 @@
  */
 
 import React from 'react';
-import {GameWebViewRsp} from '@/api/model';
-import {formatDateTime} from '@/utils/date';
+import { GameWebViewRsp } from '@/api/model';
+import { formatDateTime } from '@/utils/date';
 import {
   FaTrophy,
   FaChess,
@@ -19,39 +19,44 @@ import {
   FaComments,
   FaBriefcase,
   FaPalette,
-  FaEye
+  FaEye,
 } from 'react-icons/fa';
-import Link from "next/link";
-import TypeBadge from "@/components/type-badge";
+import Link from 'next/link';
+import TypeBadge from '@/components/type-badge';
 
 interface GameWebViewCardProps {
   game: GameWebViewRsp;
 }
 
-const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
-
+const GameWebViewCard: React.FC<GameWebViewCardProps> = ({ game }) => {
   const getCompetitionIcon = (type: number) => {
     const icons = [
-      <FaTrophy key="trophy" className="text-yellow-500"/>,
-      <FaChess key="chess" className="text-blue-500"/>,
-      <FaGamepad key="gamepad" className="text-green-500"/>,
-      <FaCalculator key="calculator" className="text-purple-500"/>,
-      <FaRobot key="robot" className="text-red-500"/>,
-      <FaComments key="comments" className="text-indigo-500"/>,
-      <FaBriefcase key="briefcase" className="text-orange-500"/>,
-      <FaPalette key="palette" className="text-pink-500"/>
+      <FaTrophy key="trophy" className="text-yellow-500" />,
+      <FaChess key="chess" className="text-blue-500" />,
+      <FaGamepad key="gamepad" className="text-green-500" />,
+      <FaCalculator key="calculator" className="text-purple-500" />,
+      <FaRobot key="robot" className="text-red-500" />,
+      <FaComments key="comments" className="text-indigo-500" />,
+      <FaBriefcase key="briefcase" className="text-orange-500" />,
+      <FaPalette key="palette" className="text-pink-500" />,
     ];
-    return icons[type % icons.length] || <FaTrophy key="default" className="text-yellow-500"/>;
+    return (
+      icons[type % icons.length] || (
+        <FaTrophy key="default" className="text-yellow-500" />
+      )
+    );
   };
 
   return (
-    <div
-      className="card bg-base-100 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+    <div className="card bg-base-100 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
       <div className="card-body p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3 truncate">
             <span className="text-2xl">{getCompetitionIcon(game.type)}</span>
-            <h2 className="card-title text-lg font-semibold break-words flex-1 truncate" title={game.name}>
+            <h2
+              className="card-title text-lg font-semibold break-words flex-1 truncate"
+              title={game.name}
+            >
               {game.name}
             </h2>
           </div>
@@ -78,7 +83,7 @@ const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
         <div className="card-actions justify-end mt-6">
           <Link href={`/game/${game.id}`} className="w-full sm:w-auto">
             <button className="btn btn-sm w-full sm:w-auto flex items-center justify-center">
-              <FaEye className="w-4 h-4 mr-1"/>
+              <FaEye className="w-4 h-4 mr-1" />
               查看成绩
             </button>
           </Link>

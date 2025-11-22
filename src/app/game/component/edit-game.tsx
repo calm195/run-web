@@ -8,11 +8,11 @@
  */
 'use client';
 
-import React, {useState, useEffect} from 'react';
-import {GameEditReq, GameWebViewRsp} from '@/api/model';
-import {editGame} from '@/api/game';
-import {FaTimes, FaSave} from 'react-icons/fa';
-import {SportTypeOptions} from "@/data/sport-type";
+import React, { useState, useEffect } from 'react';
+import { GameEditReq, GameWebViewRsp } from '@/api/model';
+import { editGame } from '@/api/game';
+import { FaTimes, FaSave } from 'react-icons/fa';
+import { SportTypeOptions } from '@/data/sport-type';
 
 interface EditGameProps {
   game: GameWebViewRsp;
@@ -20,7 +20,7 @@ interface EditGameProps {
   onClose: () => void;
 }
 
-const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
+const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
   const [formData, setFormData] = useState({
     name: game.name,
     type: game.type,
@@ -56,8 +56,10 @@ const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
     });
   }, [game]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {name, value} = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: name === 'type' ? parseInt(value) : value,
@@ -66,7 +68,7 @@ const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
     // 清除对应字段的错误信息
     if (errors[name]) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
@@ -86,8 +88,8 @@ const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
     const editData: GameEditReq = {
       id: game.id,
       name: formData.name,
-      type: formData.type
-    }
+      type: formData.type,
+    };
 
     try {
       await editGame(editData);
@@ -112,7 +114,7 @@ const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
             onClick={onClose}
             disabled={loading}
           >
-            <FaTimes/>
+            <FaTimes />
           </button>
         </div>
 
@@ -130,12 +132,11 @@ const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
               placeholder="请输入比赛名称"
               disabled={loading}
             />
-            {errors.name &&
+            {errors.name && (
               <label className="label">
-                <span className="label-text-alt text-error">
-                  {errors.name}
-                </span>
-              </label>}
+                <span className="label-text-alt text-error">{errors.name}</span>
+              </label>
+            )}
           </div>
 
           <div className="form-control">
@@ -155,12 +156,11 @@ const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
                 </option>
               ))}
             </select>
-            {errors.type &&
+            {errors.type && (
               <label className="label">
-                <span className="label-text-alt text-error">
-                  {errors.type}
-                </span>
-              </label>}
+                <span className="label-text-alt text-error">{errors.type}</span>
+              </label>
+            )}
           </div>
 
           <div className="modal-action">
@@ -177,8 +177,10 @@ const EditGame: React.FC<EditGameProps> = ({game, afterSubmit, onClose}) => {
               className="btn btn-primary flex items-center"
               disabled={loading}
             >
-              {loading && <span className="loading loading-spinner loading-xs mr-2"></span>}
-              <FaSave className="mr-2"/>
+              {loading && (
+                <span className="loading loading-spinner loading-xs mr-2"></span>
+              )}
+              <FaSave className="mr-2" />
               保存更改
             </button>
           </div>

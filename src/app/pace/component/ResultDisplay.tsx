@@ -7,9 +7,9 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import {FC} from 'react';
-import {FaRunning, FaClock} from 'react-icons/fa';
-import {PaceCalculatorResult} from '@/app/pace/PaceCalculator';
+import { FC } from 'react';
+import { FaRunning, FaClock } from 'react-icons/fa';
+import { PaceCalculatorResult } from '@/app/pace/PaceCalculator';
 
 interface ResultDisplayProps {
   mode: 'timeToPace' | 'paceToTime';
@@ -17,12 +17,16 @@ interface ResultDisplayProps {
   result: PaceCalculatorResult;
 }
 
-const ResultDisplay: FC<ResultDisplayProps> = ({mode, unit, result}) => {
+const ResultDisplay: FC<ResultDisplayProps> = ({ mode, unit, result }) => {
   return (
     <div className="space-y-3">
       <div className="alert alert-success shadow-lg">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          {mode === 'timeToPace' ? <FaRunning className="text-xl"/> : <FaClock className="text-xl"/>}
+          {mode === 'timeToPace' ? (
+            <FaRunning className="text-xl" />
+          ) : (
+            <FaClock className="text-xl" />
+          )}
           <div>
             <div className="font-bold">
               {mode === 'timeToPace' ? '配速' : '预估用时'}

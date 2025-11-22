@@ -9,17 +9,17 @@
 
 'use client';
 
-import React, {useState} from "react";
-import {GameCreateReq} from "@/api/model";
-import {createGame} from "@/api/game";
-import {SportTypeOptions} from "@/data/sport-type";
+import React, { useState } from 'react';
+import { GameCreateReq } from '@/api/model';
+import { createGame } from '@/api/game';
+import { SportTypeOptions } from '@/data/sport-type';
 
 interface CreateGameProps {
   afterSubmit: () => void;
   onClose: () => void;
 }
 
-const CreateGame: React.FC<CreateGameProps> = ({afterSubmit, onClose}) => {
+const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
   const [formData, setFormData] = useState<GameCreateReq>({
     name: '',
     type: -1,
@@ -48,8 +48,10 @@ const CreateGame: React.FC<CreateGameProps> = ({afterSubmit, onClose}) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {name, value} = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: name === 'type' ? Number(value) : value,
@@ -58,7 +60,7 @@ const CreateGame: React.FC<CreateGameProps> = ({afterSubmit, onClose}) => {
     // 清除对应字段的错误信息
     if (errors[name]) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
@@ -103,8 +105,11 @@ const CreateGame: React.FC<CreateGameProps> = ({afterSubmit, onClose}) => {
               className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
               placeholder="请输入比赛名称"
             />
-            {errors.name &&
-              <label className="label"><span className="label-text-alt text-error">{errors.name}</span></label>}
+            {errors.name && (
+              <label className="label">
+                <span className="label-text-alt text-error">{errors.name}</span>
+              </label>
+            )}
           </div>
 
           <div className="form-control">
@@ -117,19 +122,20 @@ const CreateGame: React.FC<CreateGameProps> = ({afterSubmit, onClose}) => {
               onChange={handleChange}
               className={`select select-bordered w-full ${errors.type ? 'select-error' : ''}`}
             >
-              <option value={-1} disabled>请选择比赛类型</option>
+              <option value={-1} disabled>
+                请选择比赛类型
+              </option>
               {SportTypeOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
-            {errors.type &&
+            {errors.type && (
               <label className="label">
-                <span className="label-text-alt text-error">
-                  {errors.type}
-                </span>
-              </label>}
+                <span className="label-text-alt text-error">{errors.type}</span>
+              </label>
+            )}
           </div>
 
           <div className="modal-action">
@@ -159,7 +165,7 @@ const CreateGame: React.FC<CreateGameProps> = ({afterSubmit, onClose}) => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default CreateGame;

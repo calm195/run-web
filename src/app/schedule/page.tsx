@@ -23,7 +23,7 @@ import {
   FaTimes,
 } from 'react-icons/fa';
 import { BiDumbbell } from 'react-icons/bi';
-import {SportTypeOptions} from "@/data/sport-type";
+import { SportTypeOptions } from '@/data/sport-type';
 
 // 默认选中 5km（value = 10）
 const DEFAULT_SPORT_VALUE = 10;
@@ -80,7 +80,10 @@ const generatePlans = (distance: number) => {
       { type: '轻松跑', description: '10公里轻松跑' },
       { type: '间歇跑', description: '5x1600m @ 10K 配速，慢跑恢复800m' },
       { type: '休息', description: '完全休息' },
-      { type: '马拉松配速跑', description: '16公里，中间10公里按目标马拉松配速' },
+      {
+        type: '马拉松配速跑',
+        description: '16公里，中间10公里按目标马拉松配速',
+      },
       { type: '交叉训练', description: '游泳或骑行 60 分钟' },
       { type: '长距离跑', description: '32公里长距离，后5公里模拟比赛' },
       { type: '恢复跑', description: '6公里非常轻松' },
@@ -115,15 +118,20 @@ const getMonday = (d: Date): Date => {
 };
 
 const formatDate = (date: Date): string =>
-  date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }).replace(/\s/g, '');
+  date
+    .toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+    .replace(/\s/g, '');
 
-const formatMondayStr = (date: Date): string => date.toISOString().split('T')[0];
+const formatMondayStr = (date: Date): string =>
+  date.toISOString().split('T')[0];
 
 const isToday = (date: Date): boolean => {
   const today = new Date();
-  return date.getDate() === today.getDate() &&
+  return (
+    date.getDate() === today.getDate() &&
     date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear();
+    date.getFullYear() === today.getFullYear()
+  );
 };
 
 const isWeekend = (date: Date): boolean => {
@@ -136,19 +144,23 @@ const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 export default function RunningSchedulePage() {
   // 状态
   const [monday, setMonday] = useState<Date>(() => getMonday(new Date()));
-  const [sportTypeValue, setSportTypeValue] = useState<number>(DEFAULT_SPORT_VALUE);
+  const [sportTypeValue, setSportTypeValue] =
+    useState<number>(DEFAULT_SPORT_VALUE);
   const [customPlans, setCustomPlans] = useState<any[]>(() => {
     // 初始化时根据 sportTypeValue 加载对应计划
-    const saved = typeof window !== 'undefined'
-      ? localStorage.getItem(`${CUSTOM_PLANS_PREFIX}${DEFAULT_SPORT_VALUE}`)
-      : null;
+    const saved =
+      typeof window !== 'undefined'
+        ? localStorage.getItem(`${CUSTOM_PLANS_PREFIX}${DEFAULT_SPORT_VALUE}`)
+        : null;
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length === 7) return parsed;
       } catch {}
     }
-    const distance = SportTypeOptions.find(opt => opt.value === DEFAULT_SPORT_VALUE)?.distance || 5000;
+    const distance =
+      SportTypeOptions.find(opt => opt.value === DEFAULT_SPORT_VALUE)
+        ?.distance || 5000;
     return generatePlans(distance);
   });
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -200,7 +212,8 @@ export default function RunningSchedulePage() {
   useEffect(() => {
     const loadPlans = () => {
       const storageKey = `${CUSTOM_PLANS_PREFIX}${sportTypeValue}`;
-      const saved = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
+      const saved =
+        typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -211,7 +224,9 @@ export default function RunningSchedulePage() {
         } catch {}
       }
       // 否则用默认
-      const distance = SportTypeOptions.find(opt => opt.value === sportTypeValue)?.distance || 5000;
+      const distance =
+        SportTypeOptions.find(opt => opt.value === sportTypeValue)?.distance ||
+        5000;
       setCustomPlans(generatePlans(distance));
     };
     loadPlans();
@@ -230,12 +245,17 @@ export default function RunningSchedulePage() {
 
   // ====== 4. 保存自定义计划 ======
   useEffect(() => {
-    localStorage.setItem(`${CUSTOM_PLANS_PREFIX}${sportTypeValue}`, JSON.stringify(customPlans));
+    localStorage.setItem(
+      `${CUSTOM_PLANS_PREFIX}${sportTypeValue}`,
+      JSON.stringify(customPlans)
+    );
   }, [customPlans, sportTypeValue]);
 
   // ====== 操作函数 ======
-  const handlePrevWeek = () => setMonday(prev => new Date(prev.getTime() - MS_PER_WEEK));
-  const handleNextWeek = () => setMonday(prev => new Date(prev.getTime() + MS_PER_WEEK));
+  const handlePrevWeek = () =>
+    setMonday(prev => new Date(prev.getTime() - MS_PER_WEEK));
+  const handleNextWeek = () =>
+    setMonday(prev => new Date(prev.getTime() + MS_PER_WEEK));
   const handleGoToThisWeek = () => setMonday(getMonday(new Date()));
 
   const handleSportChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -268,7 +288,15 @@ export default function RunningSchedulePage() {
     return date;
   });
 
-  const daysOfWeek = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+  const daysOfWeek = [
+    '星期一',
+    '星期二',
+    '星期三',
+    '星期四',
+    '星期五',
+    '星期六',
+    '星期日',
+  ];
 
   return (
     <div className="min-h-screen bg-base-100 p-4 md:p-8">
@@ -300,19 +328,34 @@ export default function RunningSchedulePage() {
 
           {/* 周导航 */}
           <div className="flex items-end gap-2">
-            <button onClick={handlePrevWeek} className="btn btn-ghost btn-sm md:btn-md" aria-label="上一周">
+            <button
+              onClick={handlePrevWeek}
+              className="btn btn-ghost btn-sm md:btn-md"
+              aria-label="上一周"
+            >
               <FaChevronLeft />
             </button>
-            <button onClick={handleNextWeek} className="btn btn-ghost btn-sm md:btn-md" aria-label="下一周">
+            <button
+              onClick={handleNextWeek}
+              className="btn btn-ghost btn-sm md:btn-md"
+              aria-label="下一周"
+            >
               <FaChevronRight />
             </button>
-            <button onClick={handleGoToThisWeek} className="btn btn-ghost btn-sm md:btn-md" aria-label="回到本周">
+            <button
+              onClick={handleGoToThisWeek}
+              className="btn btn-ghost btn-sm md:btn-md"
+              aria-label="回到本周"
+            >
               <FaHome />
             </button>
             <div className="flex items-center gap-1 ml-2 text-sm md:text-base">
               <FaCalendarAlt className="text-secondary" />
               <span>
-                {formatDate(monday)} – {formatDate(new Date(monday.getTime() + 6 * 24 * 60 * 60 * 1000))}
+                {formatDate(monday)} –{' '}
+                {formatDate(
+                  new Date(monday.getTime() + 6 * 24 * 60 * 60 * 1000)
+                )}
               </span>
             </div>
           </div>
@@ -339,45 +382,58 @@ export default function RunningSchedulePage() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <div className="text-xl">{icon}</div>
-                      <h2 className={`text-lg font-semibold ${isTodayFlag ? 'text-primary' : ''}`}>
+                      <h2
+                        className={`text-lg font-semibold ${isTodayFlag ? 'text-primary' : ''}`}
+                      >
                         {dayName}
                       </h2>
                     </div>
                     <span className="text-sm opacity-70">{formattedDate}</span>
                   </div>
 
-                  {isWeekendFlag && <div className="text-xs text-blue-600 mb-1">周末</div>}
+                  {isWeekendFlag && (
+                    <div className="text-xs text-blue-600 mb-1">周末</div>
+                  )}
 
                   {editingIndex === index ? (
                     <div className="space-y-2 mt-2">
                       <input
                         type="text"
                         value={editType}
-                        onChange={(e) => setEditType(e.target.value)}
+                        onChange={e => setEditType(e.target.value)}
                         className="input input-xs input-bordered w-full"
                         placeholder="训练类型"
                       />
                       <textarea
                         value={editDesc}
-                        onChange={(e) => setEditDesc(e.target.value)}
+                        onChange={e => setEditDesc(e.target.value)}
                         className="textarea textarea-xs textarea-bordered w-full"
                         placeholder="训练描述"
                         rows={2}
                       />
                       <div className="flex gap-2">
-                        <button onClick={saveEdit} className="btn btn-xs btn-success btn-outline">
+                        <button
+                          onClick={saveEdit}
+                          className="btn btn-xs btn-success btn-outline"
+                        >
                           <FaSave /> 保存
                         </button>
-                        <button onClick={cancelEdit} className="btn btn-xs btn-ghost">
+                        <button
+                          onClick={cancelEdit}
+                          className="btn btn-xs btn-ghost"
+                        >
                           <FaTimes /> 取消
                         </button>
                       </div>
                     </div>
                   ) : (
                     <>
-                      <div className="badge badge-outline mb-2">{plan.type}</div>
+                      <div className="badge badge-outline mb-2">
+                        {plan.type}
+                      </div>
                       <p className="text-sm opacity-80 flex items-start gap-1">
-                        <FaClock className="mt-0.5 flex-shrink-0" /> {plan.description}
+                        <FaClock className="mt-0.5 flex-shrink-0" />{' '}
+                        {plan.description}
                       </p>
                       <button
                         onClick={() => startEdit(index)}

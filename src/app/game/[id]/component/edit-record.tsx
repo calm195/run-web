@@ -9,11 +9,11 @@
 
 'use client';
 
-import React, {useState} from 'react';
-import {FaTimes, FaEdit} from 'react-icons/fa';
-import {RecordEditReq, RecordRsp} from '@/api/model';
-import {editRecord} from '@/api/record';
-import {convertRfc3339ToDateTimeLocal} from "@/utils/date";
+import React, { useState } from 'react';
+import { FaTimes, FaEdit } from 'react-icons/fa';
+import { RecordEditReq, RecordRsp } from '@/api/model';
+import { editRecord } from '@/api/record';
+import { convertRfc3339ToDateTimeLocal } from '@/utils/date';
 
 interface EditRecordModalProps {
   isOpen: boolean;
@@ -23,11 +23,11 @@ interface EditRecordModalProps {
 }
 
 export default function EditRecord({
-                                     isOpen,
-                                     onClose,
-                                     record,
-                                     onSuccess
-                                   }: EditRecordModalProps) {
+  isOpen,
+  onClose,
+  record,
+  onSuccess,
+}: EditRecordModalProps) {
   const [formData, setFormData] = useState<RecordEditReq>({
     id: record.id,
     name: record.name,
@@ -43,16 +43,16 @@ export default function EditRecord({
   if (!isOpen) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'name' ? value : Number(value)
+      [name]: name === 'name' ? value : Number(value),
     }));
 
     // 清除对应字段的错误
     if (errors[name]) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
@@ -80,7 +80,12 @@ export default function EditRecord({
     }
 
     // 检查完成用时是否全为0
-    if (formData.hour === 0 && formData.minute === 0 && formData.second === 0 && formData.microsecond === 0) {
+    if (
+      formData.hour === 0 &&
+      formData.minute === 0 &&
+      formData.second === 0 &&
+      formData.microsecond === 0
+    ) {
       newErrors.time = '完成用时不能全为0';
     }
 
@@ -104,19 +109,24 @@ export default function EditRecord({
       // 调用API更新记录
       await editRecord({
         ...formData,
-        finish: rfc3339Finish
+        finish: rfc3339Finish,
       });
 
       onSuccess();
       onClose();
     } catch (err) {
-      setErrors({submit: err instanceof Error ? err.message : '更新记录失败'});
+      setErrors({
+        submit: err instanceof Error ? err.message : '更新记录失败',
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTimeChange = (field: 'hour' | 'minute' | 'second' | 'microsecond', value: string) => {
+  const handleTimeChange = (
+    field: 'hour' | 'minute' | 'second' | 'microsecond',
+    value: string
+  ) => {
     let numValue = parseInt(value) || 0;
 
     // 根据字段类型限制数值范围
@@ -130,13 +140,13 @@ export default function EditRecord({
 
     setFormData(prev => ({
       ...prev,
-      [field]: numValue
+      [field]: numValue,
     }));
 
     // 清除对应字段的错误
     if (errors[field] || errors.time) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[field];
         delete newErrors.time; // 清除时间全为0的错误
         return newErrors;
@@ -147,13 +157,13 @@ export default function EditRecord({
   const handleDateChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
-      finish: value
+      finish: value,
     }));
 
     // 清除完成时间字段的错误
     if (errors.finish) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors.finish;
         return newErrors;
       });
@@ -173,7 +183,7 @@ export default function EditRecord({
             onClick={onClose}
             className="btn btn-ghost btn-sm hover:bg-base-200 transition-colors"
           >
-            <FaTimes size={18}/>
+            <FaTimes size={18} />
           </button>
         </div>
 
@@ -193,7 +203,9 @@ export default function EditRecord({
           <div className="form-control">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <label className="label flex-shrink-0">
-                <span className="label-text font-medium text-base">选手姓名</span>
+                <span className="label-text font-medium text-base">
+                  选手姓名
+                </span>
               </label>
               <div className="flex-grow w-full">
                 <input
@@ -204,7 +216,9 @@ export default function EditRecord({
                   className={`input input-bordered input-lg w-full ${errors.name ? 'input-error' : ''}`}
                   placeholder="请输入选手姓名"
                 />
-                {errors.name && <p className="text-error text-sm mt-1">{errors.name}</p>}
+                {errors.name && (
+                  <p className="text-error text-sm mt-1">{errors.name}</p>
+                )}
               </div>
             </div>
           </div>
@@ -213,16 +227,20 @@ export default function EditRecord({
           <div className="form-control">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <label className="label flex-shrink-0">
-                <span className="label-text font-medium text-base">完成时间</span>
+                <span className="label-text font-medium text-base">
+                  完成时间
+                </span>
               </label>
               <div className="flex-grow w-full">
                 <input
                   type="datetime-local"
                   value={formData.finish}
-                  onChange={(e) => handleDateChange(e.target.value)}
+                  onChange={e => handleDateChange(e.target.value)}
                   className={`input input-bordered input-lg w-full ${errors.finish ? 'input-error' : ''}`}
                 />
-                {errors.finish && <p className="text-error text-sm mt-1">{errors.finish}</p>}
+                {errors.finish && (
+                  <p className="text-error text-sm mt-1">{errors.finish}</p>
+                )}
               </div>
             </div>
           </div>
@@ -231,63 +249,93 @@ export default function EditRecord({
           <div className="form-control">
             <div className="flex flex-col sm:flex-row items-start sm:items-start gap-3">
               <label className="label flex-shrink-0">
-                <span className="label-text font-medium text-base">完成用时</span>
+                <span className="label-text font-medium text-base">
+                  完成用时
+                </span>
               </label>
               <div className="flex-grow w-full">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="flex flex-col">
-                    <span className="text-xs text-gray-500 mb-1 text-center">时</span>
+                    <span className="text-xs text-gray-500 mb-1 text-center">
+                      时
+                    </span>
                     <input
                       type="number"
                       min="0"
                       value={formData.hour}
-                      onChange={(e) => handleTimeChange('hour', e.target.value)}
+                      onChange={e => handleTimeChange('hour', e.target.value)}
                       className={`input input-bordered input-sm text-center ${errors.hour ? 'input-error' : ''}`}
                       placeholder="时"
                     />
-                    {errors.hour && <p className="text-error text-xs mt-1 text-center">{errors.hour}</p>}
+                    {errors.hour && (
+                      <p className="text-error text-xs mt-1 text-center">
+                        {errors.hour}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-gray-500 mb-1 text-center">分</span>
+                    <span className="text-xs text-gray-500 mb-1 text-center">
+                      分
+                    </span>
                     <input
                       type="number"
                       min="0"
                       max="59"
                       value={formData.minute}
-                      onChange={(e) => handleTimeChange('minute', e.target.value)}
+                      onChange={e => handleTimeChange('minute', e.target.value)}
                       className={`input input-bordered input-sm text-center ${errors.minute ? 'input-error' : ''}`}
                       placeholder="分"
                     />
-                    {errors.minute && <p className="text-error text-xs mt-1 text-center">{errors.minute}</p>}
+                    {errors.minute && (
+                      <p className="text-error text-xs mt-1 text-center">
+                        {errors.minute}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-gray-500 mb-1 text-center">秒</span>
+                    <span className="text-xs text-gray-500 mb-1 text-center">
+                      秒
+                    </span>
                     <input
                       type="number"
                       min="0"
                       max="59"
                       value={formData.second}
-                      onChange={(e) => handleTimeChange('second', e.target.value)}
+                      onChange={e => handleTimeChange('second', e.target.value)}
                       className={`input input-bordered input-sm text-center ${errors.second ? 'input-error' : ''}`}
                       placeholder="秒"
                     />
-                    {errors.second && <p className="text-error text-xs mt-1 text-center">{errors.second}</p>}
+                    {errors.second && (
+                      <p className="text-error text-xs mt-1 text-center">
+                        {errors.second}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-gray-500 mb-1 text-center">微秒</span>
+                    <span className="text-xs text-gray-500 mb-1 text-center">
+                      微秒
+                    </span>
                     <input
                       type="number"
                       min="0"
                       max="999"
                       value={formData.microsecond}
-                      onChange={(e) => handleTimeChange('microsecond', e.target.value)}
+                      onChange={e =>
+                        handleTimeChange('microsecond', e.target.value)
+                      }
                       className={`input input-bordered input-sm text-center ${errors.microsecond ? 'input-error' : ''}`}
                       placeholder="微秒"
                     />
-                    {errors.microsecond && <p className="text-error text-xs mt-1 text-center">{errors.microsecond}</p>}
+                    {errors.microsecond && (
+                      <p className="text-error text-xs mt-1 text-center">
+                        {errors.microsecond}
+                      </p>
+                    )}
                   </div>
                 </div>
-                {errors.time && <p className="text-error text-sm mt-1">{errors.time}</p>}
+                {errors.time && (
+                  <p className="text-error text-sm mt-1">{errors.time}</p>
+                )}
               </div>
             </div>
           </div>
@@ -313,7 +361,7 @@ export default function EditRecord({
                 </>
               ) : (
                 <>
-                  <FaEdit size={16}/>
+                  <FaEdit size={16} />
                   更新记录
                 </>
               )}

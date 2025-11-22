@@ -8,20 +8,20 @@
  */
 'use client';
 
-import React, {useState, useEffect} from 'react';
-import {GameWebViewRsp} from "@/api/model";
-import {listGames} from "@/api/game";
+import React, { useState, useEffect } from 'react';
+import { GameWebViewRsp } from '@/api/model';
+import { listGames } from '@/api/game';
 import GameWebViewCard from '@/app/game/component/game-card';
 import GameWebViewTable from '@/app/game/component/game-table';
-import {isDateInRange} from "@/utils/date";
+import { isDateInRange } from '@/utils/date';
 import ErrorDisplay from '@/components/error-display';
-import CreateGame from "@/app/game/component/create-game";
-import EmptyState from "@/components/empty-state";
-import LoadingState from "@/components/loading-state";
-import {FaPlus} from "react-icons/fa6";
-import ActiveFiltersDisplay from "@/components/active-filters-display";
-import SearchFilterSection from "@/components/search-filter-section";
-import {DateRange, emptyDateRange, newDateChange} from "@/utils/time";
+import CreateGame from '@/app/game/component/create-game';
+import EmptyState from '@/components/empty-state';
+import LoadingState from '@/components/loading-state';
+import { FaPlus } from 'react-icons/fa6';
+import ActiveFiltersDisplay from '@/components/active-filters-display';
+import SearchFilterSection from '@/components/search-filter-section';
+import { DateRange, emptyDateRange, newDateChange } from '@/utils/time';
 
 const GameWebViewList = () => {
   const [games, setGames] = useState<GameWebViewRsp[]>([]);
@@ -51,7 +51,11 @@ const GameWebViewList = () => {
   };
 
   // 时间过滤函数
-  const filterByDateRange = (games: GameWebViewRsp[], start?: string, end?: string) => {
+  const filterByDateRange = (
+    games: GameWebViewRsp[],
+    start?: string,
+    end?: string
+  ) => {
     if (!start && !end) return games;
 
     let startDate: Date | undefined;
@@ -65,26 +69,29 @@ const GameWebViewList = () => {
       endDate.setHours(23, 59, 59, 999); // 设置为当天结束时间
     }
 
-    return games.filter(game =>
-      isDateInRange(game.created_at, startDate, endDate) ||
-      isDateInRange(game.updated_at, startDate, endDate)
+    return games.filter(
+      game =>
+        isDateInRange(game.created_at, startDate, endDate) ||
+        isDateInRange(game.updated_at, startDate, endDate)
     );
   };
 
   // 搜索和时间过滤
-  const filteredGameWebViews = Array.isArray(games) ?
-    games
-      .filter(game =>
-        game.name.includes(searchTerm) ||
-        game.type_name.includes(searchTerm)
-      )
-      .filter(game =>
-        filterByDateRange([game], dateRange.start, dateRange.end).length > 0
-      )
+  const filteredGameWebViews = Array.isArray(games)
+    ? games
+        .filter(
+          game =>
+            game.name.includes(searchTerm) ||
+            game.type_name.includes(searchTerm)
+        )
+        .filter(
+          game =>
+            filterByDateRange([game], dateRange.start, dateRange.end).length > 0
+        )
     : [];
 
   const handleDateChange = (field: 'start' | 'end', value: string) => {
-    setDateRange(prevState => (newDateChange(prevState, field, value)));
+    setDateRange(prevState => newDateChange(prevState, field, value));
   };
 
   const clearFilters = () => {
@@ -96,15 +103,13 @@ const GameWebViewList = () => {
 
   // 如果有错误，显示错误组件
   if (error) {
-    return <ErrorDisplay
-      message={error}
-      onRetry={fetchGames}
-      retryText="重试加载"
-    />;
+    return (
+      <ErrorDisplay message={error} onRetry={fetchGames} retryText="重试加载" />
+    );
   }
 
   function refreshData() {
-    fetchGames().then()
+    fetchGames().then();
   }
 
   return (
@@ -113,8 +118,7 @@ const GameWebViewList = () => {
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1
-              className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text">
               比赛中心
             </h1>
           </div>
@@ -122,7 +126,7 @@ const GameWebViewList = () => {
             className="btn flex items-center justify-center min-w-fit"
             onClick={() => setShowCreateForm(true)}
           >
-            <FaPlus className="w-5 h-5 mr-2"/>
+            <FaPlus className="w-5 h-5 mr-2" />
             添加比赛
           </button>
         </div>
@@ -130,7 +134,6 @@ const GameWebViewList = () => {
 
       {/* 搜索和过滤区域 */}
       <div className="bg-base-100 rounded-xl shadow-lg mb-6">
-
         {/* 操作按钮区域 */}
         <SearchFilterSection
           searchTerm={searchTerm}
@@ -151,24 +154,27 @@ const GameWebViewList = () => {
           searchTerm={searchTerm}
           dateRange={dateRange}
           onSearchClear={() => setSearchTerm('')}
-          onDateStartClear={() => setDateRange(prev => ({...prev, start: ''}))}
-          onDateEndClear={() => setDateRange(prev => ({...prev, end: ''}))}
+          onDateStartClear={() =>
+            setDateRange(prev => ({ ...prev, start: '' }))
+          }
+          onDateEndClear={() => setDateRange(prev => ({ ...prev, end: '' }))}
           hasActiveFilters={hasActiveFilters !== ''}
         />
       </div>
 
       {/* 加载状态 */}
-      {loading && <LoadingState/>}
+      {loading && <LoadingState />}
 
       {/* 结果显示 */}
       {!loading && (
         <>
-          {Array.isArray(filteredGameWebViews) && filteredGameWebViews.length === 0 ? (
-            <EmptyState onClearFilters={clearFilters}/>
+          {Array.isArray(filteredGameWebViews) &&
+          filteredGameWebViews.length === 0 ? (
+            <EmptyState onClearFilters={clearFilters} />
           ) : Array.isArray(filteredGameWebViews) && viewMode === 'card' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredGameWebViews.map((game) => (
-                <GameWebViewCard key={game.id} game={game}/>
+              {filteredGameWebViews.map(game => (
+                <GameWebViewCard key={game.id} game={game} />
               ))}
             </div>
           ) : Array.isArray(filteredGameWebViews) ? (

@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import {FC, useState, useEffect} from 'react';
+import { FC, useState, useEffect } from 'react';
 
 interface DistanceInputProps {
   unit: 'km' | 'mile';
@@ -18,12 +18,12 @@ interface DistanceInputProps {
 }
 
 const DistanceInput: FC<DistanceInputProps> = ({
-                                                 unit,
-                                                 distanceKm,
-                                                 onDistanceChange,
-                                                 commonDistances,
-                                                 onQuickSelect,
-                                               }) => {
+  unit,
+  distanceKm,
+  onDistanceChange,
+  commonDistances,
+  onQuickSelect,
+}) => {
   const [inputValue, setInputValue] = useState('');
 
   // 当外部 distanceKm 或 unit 变化时，更新输入框（但仅当用户没在输入）
@@ -66,18 +66,20 @@ const DistanceInput: FC<DistanceInputProps> = ({
   return (
     <div className="form-control mb-4">
       <label className="label mb-3">
-        <span className="label-text">距离 ({unit === 'km' ? '公里' : '英里'})</span>
+        <span className="label-text">
+          距离 ({unit === 'km' ? '公里' : '英里'})
+        </span>
       </label>
       <input
         type="text"
         inputMode="decimal"
         value={inputValue}
-        onChange={(e) => handleInputChange(e.target.value)}
+        onChange={e => handleInputChange(e.target.value)}
         className="input input-bordered mb-2"
         placeholder={`例如：5 ${unit === 'km' ? '公里' : '英里'}`}
       />
       <div className="flex flex-wrap gap-2">
-        {commonDistances.map((d) => (
+        {commonDistances.map(d => (
           <button
             key={d.label}
             type="button"

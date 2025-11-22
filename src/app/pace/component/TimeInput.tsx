@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import {FC} from 'react';
+import { FC } from 'react';
 
 interface TimeInputProps {
   h: string;
@@ -20,8 +20,21 @@ interface TimeInputProps {
   onMsChange: (val: string) => void;
 }
 
-const TimeInput: FC<TimeInputProps> = ({h, m, s, ms, onHChange, onMChange, onSChange, onMsChange}) => {
-  const handleNumber = (val: string, maxLen: number, setter: (v: string) => void) => {
+const TimeInput: FC<TimeInputProps> = ({
+  h,
+  m,
+  s,
+  ms,
+  onHChange,
+  onMChange,
+  onSChange,
+  onMsChange,
+}) => {
+  const handleNumber = (
+    val: string,
+    maxLen: number,
+    setter: (v: string) => void
+  ) => {
     if (/^\d*$/.test(val) && val.length <= maxLen) setter(val);
   };
 
@@ -39,7 +52,7 @@ const TimeInput: FC<TimeInputProps> = ({h, m, s, ms, onHChange, onMChange, onSCh
           type="text"
           inputMode="numeric"
           value={h}
-          onChange={(e) => handleNumber(e.target.value, 3, onHChange)}
+          onChange={e => handleNumber(e.target.value, 3, onHChange)}
           className="input input-bordered text-center w-16"
           placeholder="时"
         />
@@ -47,7 +60,7 @@ const TimeInput: FC<TimeInputProps> = ({h, m, s, ms, onHChange, onMChange, onSCh
           type="text"
           inputMode="numeric"
           value={m}
-          onChange={(e) => handleNumber(e.target.value, 2, onMChange)}
+          onChange={e => handleNumber(e.target.value, 2, onMChange)}
           className="input input-bordered text-center w-16"
           placeholder="分"
         />
@@ -55,7 +68,7 @@ const TimeInput: FC<TimeInputProps> = ({h, m, s, ms, onHChange, onMChange, onSCh
           type="text"
           inputMode="numeric"
           value={s}
-          onChange={(e) => handleNumber(e.target.value, 2, onSChange)}
+          onChange={e => handleNumber(e.target.value, 2, onSChange)}
           className="input input-bordered text-center w-16"
           placeholder="秒"
         />
@@ -63,7 +76,7 @@ const TimeInput: FC<TimeInputProps> = ({h, m, s, ms, onHChange, onMChange, onSCh
           type="text"
           inputMode="numeric"
           value={ms.padEnd(3, '0').substring(0, 3)}
-          onChange={(e) => handleMs(e.target.value)}
+          onChange={e => handleMs(e.target.value)}
           className="input input-bordered text-center w-20 font-mono"
           placeholder="毫秒"
         />

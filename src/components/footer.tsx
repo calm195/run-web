@@ -6,23 +6,26 @@
  * @FilePath: src/components/footer.tsx
  * @Description: 页脚组件
  */
-import IcpInfo from "@/components/icp-info";
-import Motto from "@/components/motto";
+import IcpInfo from '@/components/icp-info';
+import Motto from '@/components/motto';
 
 const Footer = () => {
   return (
     <>
       <div className="flex justify-center my-4">
-        <Motto/>
+        <Motto />
       </div>
       <footer className="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
         <aside>
-          <p>Copyright © {new Date().getFullYear()} - All right reserved by kurous</p>
-          <IcpInfo/>
+          <p>
+            Copyright © {new Date().getFullYear()} - All right reserved by
+            kurous
+          </p>
+          <IcpInfo />
         </aside>
       </footer>
     </>
-  )
-}
+  );
+};
 
 export default Footer;

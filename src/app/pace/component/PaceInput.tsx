@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import {FC} from 'react';
+import { FC } from 'react';
 
 interface PaceInputProps {
   unit: 'km' | 'mile';
@@ -20,15 +20,19 @@ interface PaceInputProps {
 }
 
 const PaceInput: FC<PaceInputProps> = ({
-                                         unit,
-                                         paceMin,
-                                         paceSec,
-                                         paceMs,
-                                         onMinChange,
-                                         onSecChange,
-                                         onMsChange,
-                                       }) => {
-  const handleNumber = (val: string, maxLen: number, setter: (v: string) => void) => {
+  unit,
+  paceMin,
+  paceSec,
+  paceMs,
+  onMinChange,
+  onSecChange,
+  onMsChange,
+}) => {
+  const handleNumber = (
+    val: string,
+    maxLen: number,
+    setter: (v: string) => void
+  ) => {
     if (/^\d*$/.test(val) && val.length <= maxLen) setter(val);
   };
 
@@ -39,14 +43,16 @@ const PaceInput: FC<PaceInputProps> = ({
   return (
     <div className="form-control mb-4">
       <label className="label">
-        <span className="label-text">配速 ({unit === 'km' ? '每公里' : '每英里'})</span>
+        <span className="label-text">
+          配速 ({unit === 'km' ? '每公里' : '每英里'})
+        </span>
       </label>
       <div className="flex gap-1">
         <input
           type="text"
           inputMode="numeric"
           value={paceMin}
-          onChange={(e) => handleNumber(e.target.value, 3, onMinChange)}
+          onChange={e => handleNumber(e.target.value, 3, onMinChange)}
           className="input input-bordered text-center w-16"
           placeholder="分"
         />
@@ -54,7 +60,7 @@ const PaceInput: FC<PaceInputProps> = ({
           type="text"
           inputMode="numeric"
           value={paceSec}
-          onChange={(e) => handleNumber(e.target.value, 2, onSecChange)}
+          onChange={e => handleNumber(e.target.value, 2, onSecChange)}
           className="input input-bordered text-center w-16"
           placeholder="秒"
         />
@@ -62,7 +68,7 @@ const PaceInput: FC<PaceInputProps> = ({
           type="text"
           inputMode="numeric"
           value={paceMs.padEnd(3, '0').substring(0, 3)}
-          onChange={(e) => handleMs(e.target.value)}
+          onChange={e => handleMs(e.target.value)}
           className="input input-bordered text-center w-20 font-mono"
           placeholder="毫秒"
         />

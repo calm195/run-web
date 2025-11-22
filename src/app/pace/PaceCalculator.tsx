@@ -9,15 +9,15 @@
 
 'use client';
 
-import {useMemo, useState} from 'react';
-import {SportTypeOptions} from '@/data/sport-type';
-import {FaClock, FaTachometerAlt} from 'react-icons/fa';
-import ModeToggle from "@/app/pace/component/ModeToggle";
-import UnitToggle from "@/app/pace/component/UnitToggle";
-import DistanceInput from "@/app/pace/component/DistanceInput";
-import TimeInput from "@/app/pace/component/TimeInput";
-import PaceInput from "@/app/pace/component/PaceInput";
-import ResultDisplay from "@/app/pace/component/ResultDisplay";
+import { useMemo, useState } from 'react';
+import { SportTypeOptions } from '@/data/sport-type';
+import { FaClock, FaTachometerAlt } from 'react-icons/fa';
+import ModeToggle from '@/app/pace/component/ModeToggle';
+import UnitToggle from '@/app/pace/component/UnitToggle';
+import DistanceInput from '@/app/pace/component/DistanceInput';
+import TimeInput from '@/app/pace/component/TimeInput';
+import PaceInput from '@/app/pace/component/PaceInput';
+import ResultDisplay from '@/app/pace/component/ResultDisplay';
 
 export type PaceCalculatorResult = {
   paceMsPerKm: number;
@@ -45,7 +45,8 @@ const PaceCalculator = () => {
   const [paceMs, setPaceMs] = useState<string>('000');
 
   // ====== 工具函数（内联在 useMemo 中，或提取为纯函数）======
-  const pad = (num: number, size: number): string => num.toString().padStart(size, '0');
+  const pad = (num: number, size: number): string =>
+    num.toString().padStart(size, '0');
   const formatMs = (ms: number) => pad(ms, 3);
   const formatSec = (s: number) => pad(s, 2);
 
@@ -127,20 +128,23 @@ const PaceCalculator = () => {
     setDistanceKm(km.toString());
   };
 
-  const displayDistance = unit === 'km'
-    ? distanceKm
-    : (parseFloat(distanceKm) / 1.609344).toFixed(3);
+  const displayDistance =
+    unit === 'km' ? distanceKm : (parseFloat(distanceKm) / 1.609344).toFixed(3);
 
   return (
     <div className="card bg-base-100 shadow-xl w-full">
       <div className="card-body">
         <div className="flex items-center gap-3 mb-4">
-          <FaTachometerAlt className="text-2xl text-primary"/>
+          <FaTachometerAlt className="text-2xl text-primary" />
           <h2 className="card-title text-xl">配速计算器</h2>
         </div>
 
-        <ModeToggle mode={mode} onModeChange={setMode}/>
-        <UnitToggle unit={unit} onUnitChange={setUnit} displayDistance={displayDistance}/>
+        <ModeToggle mode={mode} onModeChange={setMode} />
+        <UnitToggle
+          unit={unit}
+          onUnitChange={setUnit}
+          displayDistance={displayDistance}
+        />
 
         <DistanceInput
           unit={unit}
@@ -151,7 +155,16 @@ const PaceCalculator = () => {
         />
 
         {mode === 'timeToPace' ? (
-          <TimeInput h={h} m={m} s={s} ms={ms} onHChange={setH} onMChange={setM} onSChange={setS} onMsChange={setMs}/>
+          <TimeInput
+            h={h}
+            m={m}
+            s={s}
+            ms={ms}
+            onHChange={setH}
+            onMChange={setM}
+            onSChange={setS}
+            onMsChange={setMs}
+          />
         ) : (
           <PaceInput
             unit={unit}
@@ -165,10 +178,10 @@ const PaceCalculator = () => {
         )}
 
         {result ? (
-          <ResultDisplay mode={mode} unit={unit} result={result}/>
+          <ResultDisplay mode={mode} unit={unit} result={result} />
         ) : (
           <div className="alert alert-warning shadow-lg">
-            <FaClock className="text-xl"/>
+            <FaClock className="text-xl" />
             <span>请输入有效数据</span>
           </div>
         )}

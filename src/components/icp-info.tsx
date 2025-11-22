@@ -7,17 +7,16 @@
  * @Description: ICP 备案信息组件
  */
 import React from 'react';
-import Link from "next/link";
+import Link from 'next/link';
 
 interface IcpProp {
   icpInfo?: string;
   link?: string;
 }
 
-const IcpInfo: React.FC<IcpProp> = ({icpInfo, link}) => {
-
-  icpInfo = icpInfo || "粤ICP备2025460136号-1";
-  link = link || "https://beian.miit.gov.cn/";
+const IcpInfo: React.FC<IcpProp> = ({ icpInfo, link }) => {
+  icpInfo = icpInfo || '粤ICP备2025460136号-1';
+  link = link || 'https://beian.miit.gov.cn/';
 
   return (
     <Link
@@ -29,6 +28,6 @@ const IcpInfo: React.FC<IcpProp> = ({icpInfo, link}) => {
       {icpInfo}
     </Link>
   );
-}
+};
 
 export default IcpInfo;

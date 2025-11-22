@@ -7,10 +7,10 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-const Title = ({text}: { text: string }) => {
+const Title = ({ text }: { text: string }) => {
   return (
     <h1 className="text-2xl md:text-4xl font-bold text-center mb-8">{text}</h1>
   );
-}
+};
 
 export default Title;

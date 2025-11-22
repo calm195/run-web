@@ -22,15 +22,15 @@ interface DeleteConfirmationModalProps {
 }
 
 const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
-                                                                           isOpen,
-                                                                           onClose,
-                                                                           onConfirm,
-                                                                           itemName,
-                                                                           title = "确认删除",
-                                                                           message = "此操作无法撤销。",
-                                                                           confirmText = "确认删除",
-                                                                           cancelText = "取消"
-                                                                         }) => {
+  isOpen,
+  onClose,
+  onConfirm,
+  itemName,
+  title = '确认删除',
+  message = '此操作无法撤销。',
+  confirmText = '确认删除',
+  cancelText = '取消',
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -41,7 +41,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
     >
       <div className="modal-box">
         <h3 className="font-bold text-lg flex items-center gap-2">
-          <FaExclamationTriangle/>
+          <FaExclamationTriangle />
           {title}
         </h3>
         <p className="py-4">
@@ -49,19 +49,11 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
         </p>
         <div className="modal-action">
           <form method="dialog">
-            <button
-              type="button"
-              className="btn"
-              onClick={onClose}
-            >
+            <button type="button" className="btn" onClick={onClose}>
               {cancelText}
             </button>
           </form>
-          <button
-            type="button"
-            className="btn btn-error"
-            onClick={onConfirm}
-          >
+          <button type="button" className="btn btn-error" onClick={onConfirm}>
             {confirmText}
           </button>
         </div>

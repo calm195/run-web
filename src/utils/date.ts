@@ -11,7 +11,7 @@ export const formatDateTime = (dateString: string): string => {
   try {
     const date = new Date(dateString);
     if (date.getFullYear() === 1) {
-      return '-'
+      return '-';
     }
     return date.toLocaleString('zh-CN', {
       year: 'numeric',
@@ -19,7 +19,7 @@ export const formatDateTime = (dateString: string): string => {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
     });
   } catch {
     return dateString;
@@ -32,7 +32,7 @@ export const formatDate = (dateString: string): string => {
     return date.toLocaleDateString('zh-CN', {
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit'
+      day: '2-digit',
     });
   } catch {
     return dateString;
@@ -47,7 +47,11 @@ export const parseDate = (dateString: string): Date => {
   }
 };
 
-export const isDateInRange = (dateString: string, startDate?: Date, endDate?: Date): boolean => {
+export const isDateInRange = (
+  dateString: string,
+  startDate?: Date,
+  endDate?: Date
+): boolean => {
   const date = parseDate(dateString);
 
   if (startDate && date < startDate) return false;
@@ -71,9 +75,10 @@ export function convertRfc3339ToDateTimeLocal(rfc3339String: string): string {
 }
 
 // 从 datetime-local 转换回 RFC3339
-export function convertDateTimeLocalToRfc3339(dateTimeLocalString: string): string {
+export function convertDateTimeLocalToRfc3339(
+  dateTimeLocalString: string
+): string {
   if (!dateTimeLocalString) return '';
   // 添加时区信息，转换为 RFC3339
   return new Date(dateTimeLocalString).toISOString();
 }
-

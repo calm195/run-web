@@ -8,18 +8,18 @@
  */
 'use client';
 
-import React, {useState} from 'react';
-import {RecordRsp, GameWebViewRsp} from '@/api/model';
-import {deleteRecord, listRecordResults} from '@/api/record';
+import React, { useState } from 'react';
+import { RecordRsp, GameWebViewRsp } from '@/api/model';
+import { deleteRecord, listRecordResults } from '@/api/record';
 import EmptyState from '@/components/empty-state';
 import ErrorDisplay from '@/components/error-display';
 import SearchFilterSection from '@/components/search-filter-section';
-import {DateRange, emptyDateRange, newDateChange} from '@/utils/time';
-import {formatDateTime, isDateInRange} from '@/utils/date';
+import { DateRange, emptyDateRange, newDateChange } from '@/utils/time';
+import { formatDateTime, isDateInRange } from '@/utils/date';
 import ActiveFiltersDisplay from '@/components/active-filters-display';
 import Link from 'next/link';
-import {FaPlus, FaTrash} from 'react-icons/fa6';
-import {FaEdit} from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa6';
+import { FaEdit } from 'react-icons/fa';
 import CreateRecord from '@/app/game/[id]/component/create-record';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
 import EditRecord from '@/app/game/[id]/component/edit-record';
@@ -32,10 +32,10 @@ interface GameRecordsClientProps {
 }
 
 export default function GameRecordsClient({
-                                            game,
-                                            initialRecords,
-                                            gameId,
-                                          }: GameRecordsClientProps) {
+  game,
+  initialRecords,
+  gameId,
+}: GameRecordsClientProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [records, setRecords] = useState<RecordRsp[]>(initialRecords);
@@ -57,7 +57,7 @@ export default function GameRecordsClient({
     try {
       setLoading(true);
       setError(null);
-      const recordsRes = await listRecordResults({id: gameId});
+      const recordsRes = await listRecordResults({ id: gameId });
       setRecords(recordsRes.data || []);
     } catch (err) {
       setError('刷新数据失败');
@@ -68,7 +68,11 @@ export default function GameRecordsClient({
   };
 
   // 时间过滤函数
-  const filterByDateRange = (items: RecordRsp[], start?: string, end?: string): RecordRsp[] => {
+  const filterByDateRange = (
+    items: RecordRsp[],
+    start?: string,
+    end?: string
+  ): RecordRsp[] => {
     if (!start && !end) return items;
 
     let startDate: Date | undefined;
@@ -101,19 +105,24 @@ export default function GameRecordsClient({
     }
 
     return filtered.sort((a, b) => {
-      const timeA = a.hour * 3600 + a.minute * 60 + a.second + a.microsecond / 1000;
-      const timeB = b.hour * 3600 + b.minute * 60 + b.second + b.microsecond / 1000;
+      const timeA =
+        a.hour * 3600 + a.minute * 60 + a.second + a.microsecond / 1000;
+      const timeB =
+        b.hour * 3600 + b.minute * 60 + b.second + b.microsecond / 1000;
       return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
     });
   };
 
-  const toggleSort = () => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+  const toggleSort = () =>
+    setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
 
   const formatTime = (record: RecordRsp) => {
     const hours = record.hour.toString().padStart(2, '0');
     const minutes = record.minute.toString().padStart(2, '0');
     const seconds = record.second.toString().padStart(2, '0');
-    const milliseconds = Math.floor(record.microsecond).toString().padStart(3, '0');
+    const milliseconds = Math.floor(record.microsecond)
+      .toString()
+      .padStart(3, '0');
     return `${hours}:${minutes}:${seconds}.${milliseconds}`;
   };
 
@@ -126,7 +135,9 @@ export default function GameRecordsClient({
     setDateRange(emptyDateRange);
   };
 
-  const hasActiveFilters = Boolean(searchTerm || dateRange.start || dateRange.end);
+  const hasActiveFilters = Boolean(
+    searchTerm || dateRange.start || dateRange.end
+  );
 
   const handleEdit = (record: RecordRsp) => {
     setEditingRecord(record);
@@ -148,7 +159,7 @@ export default function GameRecordsClient({
 
     try {
       setLoading(true);
-      const response = await deleteRecord({ids: [recordToDelete.id]});
+      const response = await deleteRecord({ ids: [recordToDelete.id] });
       if (response.code !== 0) {
         setError(response.msg || '删除失败');
         return;
@@ -172,12 +183,7 @@ export default function GameRecordsClient({
   const sortedRecords = getFilteredAndSortedRecords();
 
   if (error) {
-    return (
-      <ErrorDisplay
-        message={error}
-        onRetry={fetchRecords}
-      />
-    );
+    return <ErrorDisplay message={error} onRetry={fetchRecords} />;
   }
 
   return (
@@ -188,13 +194,13 @@ export default function GameRecordsClient({
         </Link>
         <span className="block text-center w-full">{game.name}</span>
         <div className="text-center mt-1">
-          <TypeBadge type={game.type} name={game.type_name}/>
+          <TypeBadge type={game.type} name={game.type_name} />
         </div>
         <button
           className="absolute right-0 btn btn-primary btn-sm md:btn-md"
           onClick={() => setShowCreateForm(true)}
         >
-          <FaPlus className="w-5 h-5 mr-2"/>
+          <FaPlus className="w-5 h-5 mr-2" />
           添加成绩
         </button>
       </h1>
@@ -221,13 +227,13 @@ export default function GameRecordsClient({
         searchTerm={searchTerm}
         dateRange={dateRange}
         onSearchClear={() => setSearchTerm('')}
-        onDateStartClear={() => setDateRange(prev => ({...prev, start: ''}))}
-        onDateEndClear={() => setDateRange(prev => ({...prev, end: ''}))}
+        onDateStartClear={() => setDateRange(prev => ({ ...prev, start: '' }))}
+        onDateEndClear={() => setDateRange(prev => ({ ...prev, end: '' }))}
         hasActiveFilters={hasActiveFilters}
       />
 
       {sortedRecords.length === 0 ? (
-        <EmptyState onClearFilters={clearFilters}/>
+        <EmptyState onClearFilters={clearFilters} />
       ) : (
         <div className="overflow-x-auto">
           <div className="mb-4 flex justify-end">
@@ -237,49 +243,49 @@ export default function GameRecordsClient({
           </div>
           <table className="table table-zebra w-full">
             <thead>
-            <tr className="text-center">
-              <th>排名</th>
-              <th>选手</th>
-              <th>
-                <button className="btn btn-ghost" onClick={toggleSort}>
-                  完成用时 {sortOrder === 'asc' ? '↑' : '↓'}
-                </button>
-              </th>
-              <th>完成时间</th>
-              <th>操作</th>
-            </tr>
+              <tr className="text-center">
+                <th>排名</th>
+                <th>选手</th>
+                <th>
+                  <button className="btn btn-ghost" onClick={toggleSort}>
+                    完成用时 {sortOrder === 'asc' ? '↑' : '↓'}
+                  </button>
+                </th>
+                <th>完成时间</th>
+                <th>操作</th>
+              </tr>
             </thead>
             <tbody className="text-center">
-            {sortedRecords.map((record, index) => (
-              <tr key={record.id}>
-                <td>
-                  <div className="badge badge-primary badge-outline">
-                    {index + 1}
-                  </div>
-                </td>
-                <td>{record.name}</td>
-                <td className="font-mono">{formatTime(record)}</td>
-                <td className="font-mono">{formatDateTime(record.finish)}</td>
-                <td>
-                  <div className="flex space-x-2 justify-center">
-                    <button
-                      className="btn btn-sm btn-outline btn-info"
-                      onClick={() => handleEdit(record)}
-                      title="编辑"
-                    >
-                      <FaEdit className="w-3 h-3"/>
-                    </button>
-                    <button
-                      className="btn btn-sm btn-outline btn-error"
-                      onClick={() => handleOpenDeleteModal(record)}
-                      title="删除"
-                    >
-                      <FaTrash className="w-3 h-3"/>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+              {sortedRecords.map((record, index) => (
+                <tr key={record.id}>
+                  <td>
+                    <div className="badge badge-primary badge-outline">
+                      {index + 1}
+                    </div>
+                  </td>
+                  <td>{record.name}</td>
+                  <td className="font-mono">{formatTime(record)}</td>
+                  <td className="font-mono">{formatDateTime(record.finish)}</td>
+                  <td>
+                    <div className="flex space-x-2 justify-center">
+                      <button
+                        className="btn btn-sm btn-outline btn-info"
+                        onClick={() => handleEdit(record)}
+                        title="编辑"
+                      >
+                        <FaEdit className="w-3 h-3" />
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline btn-error"
+                        onClick={() => handleOpenDeleteModal(record)}
+                        title="删除"
+                      >
+                        <FaTrash className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

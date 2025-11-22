@@ -6,8 +6,8 @@
  * @FilePath: src/api/ping.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import request from "@/utils/request";
+import request from '@/utils/request';
 
 export async function ping() {
-  return request.get("/ping", { cacheTime: 0 });
+  return request.get('/ping', { cacheTime: 0 });
 }

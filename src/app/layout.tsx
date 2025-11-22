@@ -7,31 +7,29 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import type {Metadata} from "next";
-import "./globals.css";
-import React from "react";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
+import type { Metadata } from 'next';
+import './globals.css';
+import React from 'react';
+import Footer from '@/components/footer';
+import Header from '@/components/header';
 
 export const metadata: Metadata = {
-  title: "百鲤跑者协会",
-  description: "一个充满活力的校园跑步社团",
+  title: '百鲤跑者协会',
+  description: '一个充满活力的校园跑步社团',
 };
 
 export default function RootLayout({
-                                     children,
-                                   }: Readonly<{
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="ch-CN">
-    <body>
-    <Header/>
-    <main>
-      {children}
-    </main>
-    <Footer/>
-    </body>
+      <body>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }

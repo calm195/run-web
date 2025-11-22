@@ -6,7 +6,7 @@
  * @FilePath: src/utils/time.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import {RecordRsp} from "@/api/model";
+import { RecordRsp } from '@/api/model';
 
 export interface DateRange {
   start: string;
@@ -23,17 +23,21 @@ export function formatTime(record: RecordRsp): string {
   }
 }
 
-export function newDateChange(dateRange: DateRange, field: 'start' | 'end', value: string): DateRange {
+export function newDateChange(
+  dateRange: DateRange,
+  field: 'start' | 'end',
+  value: string
+): DateRange {
   if (field === 'start' && dateRange.end && value > dateRange.end) {
     return dateRange; // 开始日期不能晚于结束日期
   }
   if (field === 'end' && dateRange.start && value < dateRange.start) {
     return dateRange; // 结束日期不能早于开始日期
   }
-  return {...dateRange, [field]: value}
+  return { ...dateRange, [field]: value };
 }
 
 export const emptyDateRange: DateRange = {
   start: '',
-  end: ''
-}
+  end: '',
+};

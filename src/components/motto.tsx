@@ -17,7 +17,7 @@ const Motto = () => {
         <span>跑得慢没关系，只要不停</span>
       </span>
     </span>
-  )
-}
+  );
+};
 
 export default Motto;

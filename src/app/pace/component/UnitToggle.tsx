@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
-import {FC} from 'react';
+import { FC } from 'react';
 
 interface UnitToggleProps {
   unit: 'km' | 'mile';
@@ -15,7 +15,11 @@ interface UnitToggleProps {
   displayDistance: string;
 }
 
-const UnitToggle: FC<UnitToggleProps> = ({unit, onUnitChange, displayDistance}) => {
+const UnitToggle: FC<UnitToggleProps> = ({
+  unit,
+  onUnitChange,
+  displayDistance,
+}) => {
   return (
     <div className="flex justify-between items-center mb-4">
       <div className="form-control">

@@ -8,14 +8,14 @@
  */
 import React from 'react';
 
-const StatItem: React.FC<StatItemProps> = ({stat}) => {
+const StatItem: React.FC<StatItemProps> = ({ stat }) => {
   return (
     <div className="stat place-items-center bg-base-100 p-5 rounded-box">
       <div className="stat-title">{stat.title}</div>
       <div className="text-xl md:text-3xl stat-value">{stat.value}</div>
       <div className="stat-desc">{stat.description}</div>
     </div>
-  )
-}
+  );
+};
 
 export default StatItem;
