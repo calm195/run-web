@@ -1,13 +1,13 @@
 # Run Web
 
-这是一个基于 [Next.js](https://nextjs.org) 构建的跑步数据追踪和分析应用，使用现代Web技术栈开发。
+这是一个基于 [Next.js](https://nextjs.org) 构建的华南理工大学百鲤跑者协会网页
 
 ## 功能特性
 
-- **首页**: 显示跑步统计数据和表格
+- **首页**: 显示协会理念与现状
 - **比赛页面**: 展示比赛信息列表
 - **配速计算器**: 计算和分析跑步配速
-- **训练计划**: 制定和管理跑步训练计划
+- **训练计划**: 跑步训练计划
 - **响应式设计**: 使用 Tailwind CSS 和 DaisyUI 构建现代化界面
 - **动画效果**: 集成 Framer Motion 提供流畅动效
 
@@ -20,6 +20,7 @@
 - **图标**: React Icons
 - **查询字符串处理**: query-string
 - **包管理**: pnpm
+- **代码规范**: Prettier, ESLint, TypeScript
 
 ## 开始使用
 
@@ -41,6 +42,7 @@ bun dev
 
 ```
 src/
+├── api/                # 请求后端
 ├── app/                 # 页面路由
 │   ├── game/           # 比赛相关页面
 │   ├── pace/           # 配速计算器页面
@@ -51,31 +53,25 @@ src/
 └── utils/             # 工具函数
 ```
 
-## 主要组件
-
-- `Stat`: 统计数据显示组件
-- `StatTable`: 统计数据表格组件
-- `Greeting`: 欢迎信息组件
-- `Loading`: 加载状态组件
-- `Header`/`Footer`: 页头和页脚组件
-
 ## 构建与部署
 
 构建项目：
 
 ```bash
-npm run build
+pm run build
 ```
 
 启动生产服务器：
 
 ```bash
-npm start
+pm start
 ```
 
-## 学习资源
+## 许可证
 
-- [Next.js 官方文档](https://nextjs.org/docs) - 了解 Next.js 特性和 API
-- [学习 Next.js](https://nextjs.org/learn) - 互动式 Next.js 教程
-- [Tailwind CSS 文档](https://tailwindcss.com) - 样式框架
-- [DaisyUI 文档](https://daisyui.com) - UI 组件库
+该项目采用 [MIT 许可证](LICENSE)。
+
+## 联系方式
+
+如有问题或建议，请提交 Issue
+
