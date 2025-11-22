@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 15:23:52
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:41:08
+ * @LastEditTime: 2025-11-22 17:33:06
  * @FilePath: src/components/header.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -12,7 +12,7 @@ import {AiOutlineMenu, AiOutlineSearch} from 'react-icons/ai';
 
 const menuItems = [
   {href: "/schedule", label: "课表"},
-  {href: "/pace", label: "成绩"},
+  {href: "/pace", label: "配速计算"},
   {href: "/game", label: "比赛"},
 ];
 
