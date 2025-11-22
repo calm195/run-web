@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 18:19:00
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 21:57:32
+ * @LastEditTime: 2025-11-21 20:42:06
  * @FilePath: src/api/model.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -54,6 +54,7 @@ export interface RecordRsp {
 }
 
 export interface RecordCreateReq {
+  game_id: number;
   name: string;
   hour: number;
   minute: number;

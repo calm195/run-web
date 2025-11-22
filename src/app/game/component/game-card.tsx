@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:32:06
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 22:08:30
+ * @LastEditTime: 2025-11-22 11:19:28
  * @FilePath: src/app/game/component/game-card.tsx
  * @Description: 比赛卡片
  */
@@ -22,19 +22,13 @@ import {
   FaEye
 } from 'react-icons/fa';
 import Link from "next/link";
+import TypeBadge from "@/components/type-badge";
 
 interface GameWebViewCardProps {
   game: GameWebViewRsp;
 }
 
 const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
-  const getTypeBadgeColor = (type: number) => {
-    const colors = [
-      'badge-primary', 'badge-secondary', 'badge-accent',
-      'badge-info', 'badge-success', 'badge-warning', 'badge-error'
-    ];
-    return colors[type % colors.length] || 'badge-neutral';
-  };
 
   const getCompetitionIcon = (type: number) => {
     const icons = [
@@ -61,9 +55,7 @@ const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
               {game.name}
             </h2>
           </div>
-          <div className={`badge ${getTypeBadgeColor(game.type)} text-sm px-3 py-1`}>
-            {game.type_name}
-          </div>
+          <TypeBadge type={game.type} name={game.type_name} />
         </div>
 
         <div className="space-y-3 mt-4">
@@ -84,7 +76,7 @@ const GameWebViewCard: React.FC<GameWebViewCardProps> = ({game}) => {
         </div>
 
         <div className="card-actions justify-end mt-6">
-          <Link href={`/game/${game.id}?name=${encodeURIComponent(game.name)}`} className="w-full sm:w-auto">
+          <Link href={`/game/${game.id}`} className="w-full sm:w-auto">
             <button className="btn btn-sm w-full sm:w-auto flex items-center justify-center">
               <FaEye className="w-4 h-4 mr-1"/>
               查看成绩

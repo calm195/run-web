@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:39:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 23:37:52
+ * @LastEditTime: 2025-11-22 11:19:28
  * @FilePath: src/app/game/component/game-table.tsx
  * @Description: 比赛表格
  */
@@ -11,9 +11,11 @@ import React, {useState} from 'react';
 import {GameWebViewRsp} from '@/api/model';
 import {formatDateTime} from '@/utils/date';
 import EditGame from "@/app/game/component/edit-game";
-import {FaExclamationTriangle, FaEye} from 'react-icons/fa';
+import {FaEye} from 'react-icons/fa';
 import {deleteGame} from "@/api/game";
 import Link from "next/link";
+import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
+import TypeBadge from "@/components/type-badge";
 
 interface GameWebViewTableProps {
   games: GameWebViewRsp[];
@@ -21,14 +23,6 @@ interface GameWebViewTableProps {
 }
 
 const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games, onRefresh}) => {
-  const getTypeBadgeColor = (type: number) => {
-    const colors = [
-      'badge-primary', 'badge-secondary', 'badge-accent',
-      'badge-info', 'badge-success', 'badge-warning', 'badge-error'
-    ];
-    return colors[type % colors.length] || 'badge-neutral';
-  };
-
   const [editingGame, setEditingGame] = useState<GameWebViewRsp | null>(null);
   const [gameToDelete, setGameToDelete] = useState<GameWebViewRsp | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -96,9 +90,7 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games, onRefresh}) =
                 <div className="font-semibold">{game.name}</div>
               </td>
               <td>
-                <div className={`badge ${getTypeBadgeColor(game.type)}`}>
-                  {game.type_name}
-                </div>
+                <TypeBadge type={game.type} name={game.type_name} />
               </td>
               <td>
                 <div className="text-sm">
@@ -112,7 +104,7 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games, onRefresh}) =
               </td>
               <td>
                 <div className="flex gap-2">
-                  <Link href={`/game/${game.id}?name=${encodeURIComponent(game.name)}`} className="w-full sm:w-auto">
+                  <Link href={`/game/${game.id}`} className="w-full sm:w-auto">
                     <button className="btn btn-sm w-full sm:w-auto flex items-center justify-center">
                       <FaEye className="w-4 h-4 mr-1"/>
                       查看成绩
@@ -149,38 +141,12 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({games, onRefresh}) =
       )}
 
       {/* 删除确认模态框 */}
-      <dialog id="delete_confirmation_modal" className={`modal ${isDeleteModalOpen ? 'modal-open' : ''}`}>
-        <div className="modal-box">
-          <h3 className="font-bold text-lg flex items-center gap-2">
-            <FaExclamationTriangle className="text-yellow-500"/>
-            确认删除
-          </h3>
-          <p className="py-4">
-            您确定要删除比赛 &#34;<span className="font-semibold">{gameToDelete?.name}</span>&#34; 吗？此操作无法撤销。
-          </p>
-          <div className="modal-action">
-            <form method="dialog">
-              <button
-                type="button"
-                className="btn"
-                onClick={cancelDelete}
-              >
-                取消
-              </button>
-            </form>
-            <button
-              type="button"
-              className="btn btn-error"
-              onClick={confirmDelete}
-            >
-              确认删除
-            </button>
-          </div>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={cancelDelete}>close</button>
-        </form>
-      </dialog>
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        itemName={gameToDelete?.name}
+      />
     </>
   );
 };

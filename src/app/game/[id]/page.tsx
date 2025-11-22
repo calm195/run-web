@@ -2,13 +2,13 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 20:21:42
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 23:37:52
+ * @LastEditTime: 2025-11-22 11:16:11
  * @FilePath: src/app/game/[id]/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 'use client';
 
-import {listRecordResults} from '@/api/record';
+import {listRecordResults, deleteRecord} from '@/api/record';
 import {GameWebViewRsp, RecordRsp} from '@/api/model';
 import {useParams} from 'next/navigation';
 import React, {useEffect, useState} from "react";
@@ -18,8 +18,15 @@ import ErrorDisplay from "@/components/error-display";
 import LoadingState from "@/components/loading-state";
 import SearchFilterSection from "@/components/search-filter-section";
 import {DateRange, emptyDateRange, newDateChange} from "@/utils/time";
-import {isDateInRange} from "@/utils/date";
+import {formatDateTime, isDateInRange} from "@/utils/date";
 import ActiveFiltersDisplay from "@/components/active-filters-display";
+import Link from "next/link";
+import {FaPlus, FaTrash} from "react-icons/fa6";
+import {FaEdit} from "react-icons/fa";
+import CreateRecord from "@/app/game/[id]/component/create-record";
+import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
+import EditRecord from "@/app/game/[id]/component/edit-record";
+import TypeBadge from "@/components/type-badge";
 
 interface ParamsProps {
   id: string;
@@ -32,6 +39,11 @@ export default function GamePage() {
   const gameId = Number(params.id);
 
   const [loading, setLoading] = useState(true);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<RecordRsp | null>(null);
+
   const [error, setError] = useState<string | null>(null);
   const [records, setRecords] = useState<RecordRsp[]>([]);
   const [game, setGame] = useState<GameWebViewRsp | null>(null);
@@ -40,11 +52,15 @@ export default function GamePage() {
   const [dateRange, setDateRange] = useState<DateRange>(emptyDateRange);
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
 
+  // 删除确认模态框相关状态
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [recordToDelete, setRecordToDelete] = useState<RecordRsp | null>(null);
 
   const fetchRecords = async () => {
     try {
       setLoading(true);
       setError(null);
+      console.log(params.type)
 
       const [gameRsp, recordsRsp] = await Promise.all([
         getGame({id: gameId}),
@@ -101,8 +117,8 @@ export default function GamePage() {
         filterByDateRange([records], dateRange.start, dateRange.end).length > 0
       )
       .sort((a, b) => {
-        const timeA = a.hour * 3600 + a.minute * 60 + a.second + a.microsecond / 1000000;
-        const timeB = b.hour * 3600 + b.minute * 60 + b.second + b.microsecond / 1000000;
+        const timeA = a.hour * 3600 + a.minute * 60 + a.second + a.microsecond / 1000;
+        const timeB = b.hour * 3600 + b.minute * 60 + b.second + b.microsecond / 1000;
         if (sortOrder === 'asc') {
           return timeA - timeB; // 升序：最快时间在前
         } else {
@@ -120,7 +136,7 @@ export default function GamePage() {
     const hours = record.hour.toString().padStart(2, '0');
     const minutes = record.minute.toString().padStart(2, '0');
     const seconds = record.second.toString().padStart(2, '0');
-    const milliseconds = Math.floor(record.microsecond / 1000).toString().padStart(3, '0');
+    const milliseconds = Math.floor(record.microsecond).toString().padStart(3, '0');
     return `${hours}:${minutes}:${seconds}.${milliseconds}`;
   };
 
@@ -137,6 +153,50 @@ export default function GamePage() {
 
   const hasActiveFilters = searchTerm || dateRange.start || dateRange.end;
 
+  // 编辑记录
+  const handleEdit = (record: RecordRsp) => {
+    setEditingRecord(record);
+    setShowEditForm(true);
+  };
+
+  const handleCancelEdit = () => {
+    setShowEditForm(false);
+    setEditingRecord(null);
+  }
+
+  // 删除记录 - 打开确认模态框
+  const handleOpenDeleteModal = (record: RecordRsp) => {
+    setRecordToDelete(record);
+    setShowDeleteModal(true);
+  };
+
+  // 确认删除
+  const handleConfirmDelete = async () => {
+    if (!recordToDelete) return;
+
+    try {
+      setLoading(true);
+      const response = await deleteRecord({ids: [recordToDelete.id]});
+
+      if (response.code !== 0) {
+        console.log(response.msg);
+      }
+      fetchRecords().then(); // 重新获取数据
+    } catch (err) {
+      console.error("删除记录失败:", err);
+    } finally {
+      setLoading(false);
+      setShowDeleteModal(false);
+      setRecordToDelete(null);
+    }
+  };
+
+  // 取消删除
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setRecordToDelete(null);
+  };
+
   if (loading) {
     return <LoadingState/>;
   }
@@ -152,8 +212,25 @@ export default function GamePage() {
     <div className="min-h-screen bg-base-100 py-8">
       <div className="container mx-auto px-4">
 
-        <h1 className="text-3xl font-bold text-center mb-8 text-primary">
-          {game?.name}
+        <h1 className="text-2xl md:text-3xl font-bold mb-8 text-primary relative">
+          <Link href="/game" className="absolute left-0 text-lg md:text-2xl">
+            ← 返回
+          </Link>
+          <span className="block text-center w-full">{game?.name}</span>
+          <div className="text-center">
+            {game && <TypeBadge
+              type={game.type}
+              name={game.type_name}
+            />}
+          </div>
+
+          <button
+            className="absolute right-0 btn btn-primary btn-sm md:btn-md"
+            onClick={() => {setShowCreateForm(true)}}
+          >
+            <FaPlus className="w-5 h-5 mr-2"/>
+            添加成绩
+          </button>
         </h1>
 
         {/* 搜索和过滤区域 */}
@@ -194,26 +271,27 @@ export default function GamePage() {
                 className="btn btn-outline btn-sm"
                 onClick={toggleSort}
               >
-                {sortOrder === 'asc' ? '升序' : '降序'} - 完成时间
+                {sortOrder === 'asc' ? '升序' : '降序'} - 完成用时
               </button>
             </div>
             <table className="table table-zebra w-full">
               <thead>
-              <tr>
+              <tr className="text-center">
                 <th>排名</th>
                 <th>选手</th>
                 <th>
                   <button
-                    className="btn btn-ghost btn-xs"
+                    className="btn btn-ghost"
                     onClick={toggleSort}
                   >
-                    完成时间 {sortOrder === 'asc' ? '↑' : '↓'}
+                    完成用时 {sortOrder === 'asc' ? '↑' : '↓'}
                   </button>
                 </th>
-                <th>提交时间</th>
+                <th>完成时间</th>
+                <th>操作</th>
               </tr>
               </thead>
-              <tbody>
+              <tbody className="text-center">
               {sortedRecords.map((record, index) => (
                 <tr key={record.id}>
                   <td>
@@ -222,10 +300,30 @@ export default function GamePage() {
                     </div>
                   </td>
                   <td>{record.name}</td>
-                  <td>
+                  <td className="font-mono">
                     {formatTime(record)}
                   </td>
-                  <td>{new Date(record.created_at).toLocaleDateString('zh-CN')}</td>
+                  <td className="font-mono">
+                    {formatDateTime(record.finish)}
+                  </td>
+                  <td>
+                    <div className="flex space-x-2 justify-center">
+                      <button
+                        className="btn btn-sm btn-outline btn-info"
+                        onClick={() => handleEdit(record)}
+                        title="编辑"
+                      >
+                        <FaEdit className="w-3 h-3" />
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline btn-error"
+                        onClick={() => handleOpenDeleteModal(record)}
+                        title="删除"
+                      >
+                        <FaTrash className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
               </tbody>
@@ -233,6 +331,35 @@ export default function GamePage() {
           </div>
         )}
       </div>
+
+      {showCreateForm && (
+        <CreateRecord
+          onClose={() => setShowCreateForm(false)}
+          gameId={gameId}
+          onSuccess={fetchRecords}
+        />
+      )}
+
+      {editingRecord && (
+        <EditRecord
+        isOpen={showEditForm}
+        onClose={handleCancelEdit}
+        record={editingRecord}
+        onSuccess={fetchRecords}
+        />
+      )}
+
+      {/* 删除确认模态框 */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        itemName={recordToDelete?.name}
+        title="确认删除成绩"
+        message="此操作无法撤销，成绩将永久删除。"
+        confirmText="确认删除"
+        cancelText="取消"
+      />
     </div>
   );
 }
