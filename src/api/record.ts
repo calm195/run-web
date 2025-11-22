@@ -2,12 +2,10 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 20:21:22
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 23:37:52
+ * @LastEditTime: 2025-11-22 12:24:26
  * @FilePath: src/api/record.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-'use client';
-
 import {RecordRsp, GetReq, ResponseData, RecordCreateReq, RecordEditReq, DeleteReq} from "@/api/model";
 import request from "@/utils/request";
 
