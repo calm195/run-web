@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 17:58:06
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-22 18:06:36
+ * @LastEditTime: 2025-11-24 22:46:43
  * @FilePath: src/utils/request.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -25,6 +25,13 @@ type Config =
   | { next: { revalidate: number } }
   | { cache: 'no-store' }
   | { cache: 'force-cache' };
+
+function getApiBaseUrl() {
+  if (typeof window === 'undefined') {
+    return process.env.API_BASE;
+  }
+  return process.env.NEXT_PUBLIC_API_BASE || '';
+}
 
 class Request {
   /**
@@ -102,12 +109,14 @@ class Request {
   }
 
   async httpFactory<T>({ url = '', params = {}, method }: Props): Promise<T> {
+    const fullUrl = getApiBaseUrl() + url;
     const req = this.interceptorsRequest({
-      url: process.env.NEXT_PUBLIC_BASEURL + url,
+      url: fullUrl,
       method,
       params: params.params,
       cacheTime: params.cacheTime,
     });
+
     const res = await fetch(req.url, req.options);
     return this.interceptorsResponse<T>(res);
   }
