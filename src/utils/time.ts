@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 20:38:58
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 23:37:52
+ * @LastEditTime: 2025-11-27 17:18:25
  * @FilePath: src/utils/time.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -21,6 +21,25 @@ export function formatTime(record: RecordRsp): string {
   } else {
     return `${record.second}.${Math.floor(record.microsecond / 100000)}秒`;
   }
+}
+
+export function formatTimeToHMS(seconds: number): string {
+  if (isNaN(seconds) || seconds < 0) {
+    return '--:--:--.---';
+  }
+
+  const totalMs = Math.round(seconds * 1000); // 转为毫秒，避免浮点误差
+
+  const hours = Math.floor(totalMs / (3600 * 1000));
+  const minutes = Math.floor((totalMs % (3600 * 1000)) / (60 * 1000));
+  const secs = Math.floor((totalMs % (60 * 1000)) / 1000);
+  const millis = totalMs % 1000;
+
+  return `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${millis
+    .toString()
+    .padStart(3, '0')}`;
 }
 
 export function newDateChange(
