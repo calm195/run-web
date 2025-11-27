@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 15:24:40
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 15:25:22
- * @FilePath: src/components/error-display.tsx
+ * @LastEditTime: 2025-11-27 17:50:04
+ * @FilePath: src/components/ErrorDisplay.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 

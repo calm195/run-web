@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 19:33:42
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 15:51:59
- * @FilePath: src/components/motto.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/components/Motto.tsx
  * @Description: 句子轮播
  */
 

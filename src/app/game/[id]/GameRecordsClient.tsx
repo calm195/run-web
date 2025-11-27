@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 12:08:15
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-22 12:36:18
+ * @LastEditTime: 2025-11-27 17:55:41
  * @FilePath: src/app/game/[id]/GameRecordsClient.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -11,19 +11,19 @@
 import React, { useState } from 'react';
 import { RecordRsp, GameWebViewRsp } from '@/api/model';
 import { deleteRecord, listRecordResults } from '@/api/record';
-import EmptyState from '@/components/empty-state';
-import ErrorDisplay from '@/components/error-display';
-import SearchFilterSection from '@/components/search-filter-section';
+import EmptyState from '@/components/EmptyState';
+import ErrorDisplay from '@/components/ErrorDisplay';
+import SearchFilterSection from '@/components/SearchFilterSection';
 import { DateRange, emptyDateRange, newDateChange } from '@/utils/time';
 import { formatDateTime, isDateInRange } from '@/utils/date';
-import ActiveFiltersDisplay from '@/components/active-filters-display';
+import ActiveFilterDisplay from '@/components/ActiveFilterDisplay';
 import Link from 'next/link';
 import { FaPlus, FaTrash } from 'react-icons/fa6';
 import { FaEdit } from 'react-icons/fa';
-import CreateRecord from '@/app/game/[id]/component/create-record';
+import CreateRecord from '@/app/game/[id]/component/CreateRecord';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
-import EditRecord from '@/app/game/[id]/component/edit-record';
-import TypeBadge from '@/components/type-badge';
+import EditRecord from '@/app/game/[id]/component/EditRecord';
+import TypeBadge from '@/components/TypeBadge';
 
 interface GameRecordsClientProps {
   game: GameWebViewRsp;
@@ -223,7 +223,7 @@ export default function GameRecordsClient({
       </div>
 
       {/* 当前过滤条件显示 */}
-      <ActiveFiltersDisplay
+      <ActiveFilterDisplay
         searchTerm={searchTerm}
         dateRange={dateRange}
         onSearchClear={() => setSearchTerm('')}

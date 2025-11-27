@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 22:25:30
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:41:08
- * @FilePath: src/components/empty-state.tsx
+ * @LastEditTime: 2025-11-27 17:50:04
+ * @FilePath: src/components/EmptyState.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 import React from 'react';

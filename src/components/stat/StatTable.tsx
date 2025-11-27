@@ -2,14 +2,14 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 11:33:59
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 19:55:36
- * @FilePath: src/components/stat/stat-table.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/components/stat/StatTable.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import StatItem from '@/components/stat/stat-item';
+import StatItem from '@/components/stat/StatItem';
 import React, { useMemo } from 'react';
 import { generateExampleData } from '@/utils/calculate';
-import Title from '@/components/title';
+import Title from '@/components/Title';
 
 const StatsTable: React.FC<{ data?: StatData[] }> = ({ data = [] }) => {
   // 如果没有传入数据，则使用默认示例数据

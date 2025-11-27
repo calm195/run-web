@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:36:38
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 23:33:37
- * @FilePath: src/app/game/component/game-list.tsx
+ * @LastEditTime: 2025-11-27 20:25:16
+ * @FilePath: src/app/game/component/GameList.tsx
  * @Description: 比赛列表
  */
 'use client';
@@ -11,16 +11,16 @@
 import React, { useState, useEffect } from 'react';
 import { GameWebViewRsp } from '@/api/model';
 import { listGames } from '@/api/game';
-import GameWebViewCard from '@/app/game/component/game-card';
-import GameWebViewTable from '@/app/game/component/game-table';
+import GameWebViewCard from '@/app/game/component/GameCard';
+import GameWebViewTable from '@/app/game/component/GameTable';
 import { isDateInRange } from '@/utils/date';
-import ErrorDisplay from '@/components/error-display';
-import CreateGame from '@/app/game/component/create-game';
-import EmptyState from '@/components/empty-state';
-import LoadingState from '@/components/loading-state';
+import ErrorDisplay from '@/components/ErrorDisplay';
+import CreateGame from '@/app/game/component/CreateGame';
+import EmptyState from '@/components/EmptyState';
+import LoadingState from '@/components/LoadingState';
 import { FaPlus } from 'react-icons/fa6';
-import ActiveFiltersDisplay from '@/components/active-filters-display';
-import SearchFilterSection from '@/components/search-filter-section';
+import ActiveFilterDisplay from '@/components/ActiveFilterDisplay';
+import SearchFilterSection from '@/components/SearchFilterSection';
 import { DateRange, emptyDateRange, newDateChange } from '@/utils/time';
 
 const GameWebViewList = () => {
@@ -150,7 +150,7 @@ const GameWebViewList = () => {
         />
 
         {/* 当前过滤条件显示 */}
-        <ActiveFiltersDisplay
+        <ActiveFilterDisplay
           searchTerm={searchTerm}
           dateRange={dateRange}
           onSearchClear={() => setSearchTerm('')}

@@ -2,12 +2,12 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 12:10:19
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:41:08
- * @FilePath: src/components/footer.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/components/Footer.tsx
  * @Description: 页脚组件
  */
-import IcpInfo from '@/components/icp-info';
-import Motto from '@/components/motto';
+import IcpInfo from '@/components/IcpInfo';
+import Motto from '@/components/Motto';
 
 const Footer = () => {
   return (

@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-26 21:58:18
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:33:16
+ * @LastEditTime: 2025-11-27 17:55:41
  * @FilePath: src/app/standard/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -13,7 +13,7 @@ import StandardFilters from '@/components/StandardFilters';
 import StandardList from '@/app/standard/components/StandardList';
 import { useEffect, useState } from 'react';
 import { listStandard } from '@/api/standard';
-import Title from '@/components/title';
+import Title from '@/components/Title';
 
 export default function StandardsPage() {
   const [standards, setStandards] = useState<Standard[]>([]);

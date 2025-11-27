@@ -2,20 +2,20 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:39:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-22 11:19:28
- * @FilePath: src/app/game/component/game-table.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/app/game/component/GameTable.tsx
  * @Description: 比赛表格
  */
 
 import React, { useState } from 'react';
 import { GameWebViewRsp } from '@/api/model';
 import { formatDateTime } from '@/utils/date';
-import EditGame from '@/app/game/component/edit-game';
+import EditGame from '@/app/game/component/EditGame';
 import { FaEye } from 'react-icons/fa';
 import { deleteGame } from '@/api/game';
 import Link from 'next/link';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
-import TypeBadge from '@/components/type-badge';
+import TypeBadge from '@/components/TypeBadge';
 
 interface GameWebViewTableProps {
   games: GameWebViewRsp[];

@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 10:05:02
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-17 21:09:42
- * @FilePath: src/components/stat.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/components/Stat.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 

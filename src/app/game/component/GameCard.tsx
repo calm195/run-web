@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:32:06
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-22 11:19:28
- * @FilePath: src/app/game/component/game-card.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/app/game/component/GameCard.tsx
  * @Description: 比赛卡片
  */
 
@@ -22,7 +22,7 @@ import {
   FaEye,
 } from 'react-icons/fa';
 import Link from 'next/link';
-import TypeBadge from '@/components/type-badge';
+import TypeBadge from '@/components/TypeBadge';
 
 interface GameWebViewCardProps {
   game: GameWebViewRsp;

@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 19:28:13
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:41:08
- * @FilePath: src/components/greeting.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/components/Greeting.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 'use client';
@@ -19,7 +19,7 @@ import {
 import { GiFinishLine, GiPodium, GiSprint } from 'react-icons/gi';
 import { IoMdTimer } from 'react-icons/io';
 import { SiRunkeeper } from 'react-icons/si';
-import Title from '@/components/title';
+import Title from '@/components/Title';
 
 const Greeting = () => {
   const features = [

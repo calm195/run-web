@@ -1,29 +1,28 @@
 /**
  * @Author: kurous wx2178@126.com
- * @Date: 2025-11-20 14:59:00
+ * @Date: 2025-11-19 19:57:40
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 16:46:23
- * @FilePath: src/app/game/component/edit-game.tsx
- * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
+ * @LastEditTime: 2025-11-27 17:46:34
+ * @FilePath: src/app/game/component/CreateGame.tsx
+ * @Description: 创建比赛
  */
+
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { GameEditReq, GameWebViewRsp } from '@/api/model';
-import { editGame } from '@/api/game';
-import { FaTimes, FaSave } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { GameCreateReq } from '@/api/model';
+import { createGame } from '@/api/game';
 import { SportTypeOptions } from '@/data/sport-type';
 
-interface EditGameProps {
-  game: GameWebViewRsp;
-  afterSubmit?: () => void;
+interface CreateGameProps {
+  afterSubmit: () => void;
   onClose: () => void;
 }
 
-const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
-  const [formData, setFormData] = useState({
-    name: game.name,
-    type: game.type,
+const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
+  const [formData, setFormData] = useState<GameCreateReq>({
+    name: '',
+    type: -1,
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -49,20 +48,13 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  useEffect(() => {
-    setFormData({
-      name: game.name,
-      type: game.type,
-    });
-  }, [game]);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'type' ? parseInt(value) : value,
+      [name]: name === 'type' ? Number(value) : value,
     }));
 
     // 清除对应字段的错误信息
@@ -77,28 +69,19 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     // 提交前验证
     if (!validateForm()) {
-      setLoading(false);
       return;
     }
 
-    const editData: GameEditReq = {
-      id: game.id,
-      name: formData.name,
-      type: formData.type,
-    };
-
+    setLoading(true);
     try {
-      await editGame(editData);
-      if (afterSubmit) {
-        afterSubmit();
-      }
+      await createGame(formData);
       onClose();
-    } catch (err) {
-      console.error('更新比赛失败:', err);
+      afterSubmit();
+    } catch (error) {
+      console.error('创建比赛失败:', error);
     } finally {
       setLoading(false);
     }
@@ -107,21 +90,12 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
   return (
     <div className="modal modal-open">
       <div className="modal-box max-w-2xl">
-        <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-bold">编辑比赛信息</h2>
-          <button
-            className="btn btn-ghost btn-sm"
-            onClick={onClose}
-            disabled={loading}
-          >
-            <FaTimes />
-          </button>
-        </div>
+        <h3 className="font-bold text-lg mb-4">创建新比赛</h3>
 
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="form-control">
             <label className="label">
-              <span className="label-text">比赛名称</span>
+              <span className="label-text font-medium">比赛名称</span>
             </label>
             <input
               type="text"
@@ -130,7 +104,6 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
               onChange={handleChange}
               className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
               placeholder="请输入比赛名称"
-              disabled={loading}
             />
             {errors.name && (
               <label className="label">
@@ -141,18 +114,20 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
 
           <div className="form-control">
             <label className="label">
-              <span className="label-text">比赛类型</span>
+              <span className="label-text font-medium">比赛类型</span>
             </label>
             <select
               name="type"
               value={formData.type}
               onChange={handleChange}
               className={`select select-bordered w-full ${errors.type ? 'select-error' : ''}`}
-              disabled={loading}
             >
-              {SportTypeOptions.map(type => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
+              <option value={-1} disabled>
+                请选择比赛类型
+              </option>
+              {SportTypeOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </select>
@@ -174,14 +149,17 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
             </button>
             <button
               type="submit"
-              className="btn btn-primary flex items-center"
+              className="btn btn-primary"
               disabled={loading}
             >
-              {loading && (
-                <span className="loading loading-spinner loading-xs mr-2"></span>
+              {loading ? (
+                <>
+                  <span className="loading loading-spinner loading-xs mr-2"></span>
+                  创建中...
+                </>
+              ) : (
+                '创建比赛'
               )}
-              <FaSave className="mr-2" />
-              保存更改
             </button>
           </div>
         </form>
@@ -190,4 +168,4 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
   );
 };
 
-export default EditGame;
+export default CreateGame;

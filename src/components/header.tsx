@@ -2,11 +2,11 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 15:23:52
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:40:37
+ * @LastEditTime: 2025-11-27 17:55:41
  * @FilePath: src/components/header.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import ThemeController from '@/components/theme-controller';
+import ThemeController from '@/components/ThemeController';
 import Link from 'next/link';
 import { AiOutlineMenu, AiOutlineSearch } from 'react-icons/ai';
 

@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 12:04:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:41:08
- * @FilePath: src/components/icp-info.tsx
+ * @LastEditTime: 2025-11-27 17:50:04
+ * @FilePath: src/components/IcpInfo.tsx
  * @Description: ICP 备案信息组件
  */
 import React from 'react';

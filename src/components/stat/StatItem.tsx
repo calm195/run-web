@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-17 11:34:50
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:41:08
- * @FilePath: src/components/stat/stat-item.tsx
+ * @LastEditTime: 2025-11-27 17:47:36
+ * @FilePath: src/components/stat/StatItem.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 import React from 'react';

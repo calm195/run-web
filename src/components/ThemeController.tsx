@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-16 10:31:52
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-20 14:26:46
- * @FilePath: src/components/theme-controller.tsx
+ * @LastEditTime: 2025-11-27 17:55:41
+ * @FilePath: src/components/ThemeController.tsx
  * @Description: 主题切换组件 - 日间模式 -> retro / 夜间模式 -> luxury
  */
 import { FaChevronDown } from 'react-icons/fa';

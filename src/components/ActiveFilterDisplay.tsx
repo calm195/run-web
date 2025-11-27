@@ -2,8 +2,8 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 22:55:09
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-19 23:15:53
- * @FilePath: src/components/active-filters-display.tsx
+ * @LastEditTime: 2025-11-27 17:50:04
+ * @FilePath: src/components/ActiveFilterDisplay.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 'use client';
@@ -20,7 +20,7 @@ interface ActiveFiltersDisplayProps {
   hasActiveFilters: boolean;
 }
 
-const ActiveFiltersDisplay: React.FC<ActiveFiltersDisplayProps> = ({
+const ActiveFilterDisplay: React.FC<ActiveFiltersDisplayProps> = ({
   searchTerm,
   dateRange,
   onSearchClear,
@@ -69,4 +69,4 @@ const ActiveFiltersDisplay: React.FC<ActiveFiltersDisplayProps> = ({
   );
 };
 
-export default ActiveFiltersDisplay;
+export default ActiveFilterDisplay;
