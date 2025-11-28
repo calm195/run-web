@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 14:59:00
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:46:35
+ * @LastEditTime: 2025-11-28 11:16:26
  * @FilePath: src/app/game/component/EditGame.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -13,14 +13,15 @@ import { GameEditReq, GameWebViewRsp } from '@/api/model';
 import { editGame } from '@/api/game';
 import { FaTimes, FaSave } from 'react-icons/fa';
 import { SportTypeOptions } from '@/data/sport-type';
+import { KeyedMutator } from 'swr';
 
 interface EditGameProps {
   game: GameWebViewRsp;
-  afterSubmit?: () => void;
+  mutate: KeyedMutator<GameWebViewRsp[]>;
   onClose: () => void;
 }
 
-const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
+const EditGame: React.FC<EditGameProps> = ({ game, mutate, onClose }) => {
   const [formData, setFormData] = useState({
     name: game.name,
     type: game.type,
@@ -62,7 +63,7 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'type' ? parseInt(value) : value,
+      [name]: name === 'type' ? parseInt(value, 10) : value,
     }));
 
     // 清除对应字段的错误信息
@@ -77,25 +78,21 @@ const EditGame: React.FC<EditGameProps> = ({ game, afterSubmit, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (loading) return;
 
-    // 提交前验证
-    if (!validateForm()) {
-      setLoading(false);
-      return;
-    }
+    if (!validateForm()) return;
+
+    setLoading(true);
 
     const editData: GameEditReq = {
       id: game.id,
-      name: formData.name,
+      name: formData.name.trim(),
       type: formData.type,
     };
 
     try {
       await editGame(editData);
-      if (afterSubmit) {
-        afterSubmit();
-      }
+      await mutate();
       onClose();
     } catch (err) {
       console.error('更新比赛失败:', err);

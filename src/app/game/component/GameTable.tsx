@@ -2,10 +2,12 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:39:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:55:41
+ * @LastEditTime: 2025-11-28 11:25:23
  * @FilePath: src/app/game/component/GameTable.tsx
  * @Description: 比赛表格
  */
+
+'use client';
 
 import React, { useState } from 'react';
 import { GameWebViewRsp } from '@/api/model';
@@ -16,15 +18,16 @@ import { deleteGame } from '@/api/game';
 import Link from 'next/link';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
 import TypeBadge from '@/components/TypeBadge';
+import { KeyedMutator } from 'swr';
 
 interface GameWebViewTableProps {
   games: GameWebViewRsp[];
-  onRefresh?: () => void;
+  mutate: KeyedMutator<GameWebViewRsp[]>;
 }
 
 const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
   games,
-  onRefresh,
+  mutate,
 }) => {
   const [editingGame, setEditingGame] = useState<GameWebViewRsp | null>(null);
   const [gameToDelete, setGameToDelete] = useState<GameWebViewRsp | null>(null);
@@ -38,14 +41,6 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
     setEditingGame(null);
   };
 
-  const handleSubmitEdit = () => {
-    setEditingGame(null);
-    if (onRefresh) {
-      onRefresh();
-    }
-  };
-
-  // 处理删除按钮点击
   const handleDeleteClick = (game: GameWebViewRsp) => {
     setGameToDelete(game);
     setIsDeleteModalOpen(true);
@@ -56,9 +51,7 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
     if (gameToDelete) {
       try {
         await deleteGame({ ids: [gameToDelete.id] });
-        if (onRefresh) {
-          onRefresh();
-        }
+        await mutate();
       } catch (error) {
         console.log(error);
       }
@@ -95,18 +88,10 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
                 <td>
                   <TypeBadge type={game.type} name={game.type_name} />
                 </td>
+                <td className="text-sm">{formatDateTime(game.created_at)}</td>
+                <td className="text-sm">{formatDateTime(game.updated_at)}</td>
                 <td>
-                  <div className="text-sm">
-                    {formatDateTime(game.created_at)}
-                  </div>
-                </td>
-                <td>
-                  <div className="text-sm">
-                    {formatDateTime(game.updated_at)}
-                  </div>
-                </td>
-                <td>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Link
                       href={`/game/${game.id}`}
                       className="w-full sm:w-auto"
@@ -117,13 +102,13 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
                       </button>
                     </Link>
                     <button
-                      className="btn btn-outline btn-sm"
+                      className="btn btn-outline btn-sm flex-1 sm:flex-none"
                       onClick={() => handleEdit(game)}
                     >
                       编辑
                     </button>
                     <button
-                      className="btn btn-error btn-sm"
+                      className="btn btn-error btn-sm flex-1 sm:flex-none"
                       onClick={() => handleDeleteClick(game)}
                     >
                       删除
@@ -139,9 +124,7 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
       {editingGame && (
         <EditGame
           game={editingGame}
-          afterSubmit={() => {
-            handleSubmitEdit();
-          }}
+          mutate={mutate}
           onClose={handleCloseEdit}
         />
       )}
@@ -152,6 +135,10 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
         onClose={cancelDelete}
         onConfirm={confirmDelete}
         itemName={gameToDelete?.name}
+        title="确认删除比赛"
+        message="删除比赛将同时删除其所有成绩记录，此操作不可逆。"
+        confirmText="确认删除"
+        cancelText="取消"
       />
     </>
   );

@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 19:57:40
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:46:34
+ * @LastEditTime: 2025-11-28 11:10:45
  * @FilePath: src/app/game/component/CreateGame.tsx
  * @Description: 创建比赛
  */
@@ -10,16 +10,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { GameCreateReq } from '@/api/model';
+import { GameCreateReq, GameWebViewRsp } from '@/api/model';
 import { createGame } from '@/api/game';
 import { SportTypeOptions } from '@/data/sport-type';
+import { KeyedMutator } from 'swr';
 
 interface CreateGameProps {
-  afterSubmit: () => void;
+  mutate: KeyedMutator<GameWebViewRsp[]>;
   onClose: () => void;
 }
 
-const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
+const CreateGame: React.FC<CreateGameProps> = ({ mutate, onClose }) => {
   const [formData, setFormData] = useState<GameCreateReq>({
     name: '',
     type: -1,
@@ -70,6 +71,8 @@ const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (loading) return;
+
     // 提交前验证
     if (!validateForm()) {
       return;
@@ -78,8 +81,8 @@ const CreateGame: React.FC<CreateGameProps> = ({ afterSubmit, onClose }) => {
     setLoading(true);
     try {
       await createGame(formData);
+      await mutate();
       onClose();
-      afterSubmit();
     } catch (error) {
       console.error('创建比赛失败:', error);
     } finally {

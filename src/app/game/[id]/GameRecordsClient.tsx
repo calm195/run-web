@@ -2,20 +2,21 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 12:08:15
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:55:41
+ * @LastEditTime: 2025-11-28 11:21:08
  * @FilePath: src/app/game/[id]/GameRecordsClient.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 'use client';
 
 import React, { useState } from 'react';
+import useSWR from 'swr';
 import { RecordRsp, GameWebViewRsp } from '@/api/model';
 import { deleteRecord, listRecordResults } from '@/api/record';
 import EmptyState from '@/components/EmptyState';
 import ErrorDisplay from '@/components/ErrorDisplay';
 import SearchFilterSection from '@/components/SearchFilterSection';
 import { DateRange, emptyDateRange, newDateChange } from '@/utils/time';
-import { formatDateTime, isDateInRange } from '@/utils/date';
+import { formatDateTime } from '@/utils/date';
 import ActiveFilterDisplay from '@/components/ActiveFilterDisplay';
 import Link from 'next/link';
 import { FaPlus, FaTrash } from 'react-icons/fa6';
@@ -24,6 +25,7 @@ import CreateRecord from '@/app/game/[id]/component/CreateRecord';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
 import EditRecord from '@/app/game/[id]/component/EditRecord';
 import TypeBadge from '@/components/TypeBadge';
+import { useFilteredRecords } from '@/hooks/useFilteredRecords';
 
 interface GameRecordsClientProps {
   game: GameWebViewRsp;
@@ -31,160 +33,80 @@ interface GameRecordsClientProps {
   gameId: number;
 }
 
+const fetchRecords = (gameId: number) =>
+  listRecordResults({ id: gameId }).then(res => res.data || []);
+
+const formatTime = (record: RecordRsp) => {
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const ms = Math.floor(record.microsecond).toString().padStart(3, '0');
+  return `${pad(record.hour)}:${pad(record.minute)}:${pad(record.second)}.${ms}`;
+};
+
 export default function GameRecordsClient({
   game,
   initialRecords,
   gameId,
 }: GameRecordsClientProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [records, setRecords] = useState<RecordRsp[]>(initialRecords);
+  const {
+    data: records,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR(`/game/${gameId}/records`, () => fetchRecords(gameId), {
+    fallbackData: initialRecords,
+    refreshInterval: 10000,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+  });
 
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<RecordRsp | null>(null);
+  const [modal, setModal] = useState<
+    | { type: 'create' }
+    | { type: 'edit'; record: RecordRsp }
+    | { type: 'delete'; record: RecordRsp }
+    | null
+  >(null);
 
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [searchTerm, setSearchTerm] = useState('');
   const [dateRange, setDateRange] = useState<DateRange>(emptyDateRange);
   const [viewMode, setViewMode] = useState<'card' | 'table'>('table');
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [recordToDelete, setRecordToDelete] = useState<RecordRsp | null>(null);
+  const filteredRecords = useFilteredRecords(
+    records,
+    searchTerm,
+    dateRange,
+    sortOrder
+  );
 
-  // 刷新数据（用于创建/编辑/删除后）
-  const fetchRecords = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const recordsRes = await listRecordResults({ id: gameId });
-      setRecords(recordsRes.data || []);
-    } catch (err) {
-      setError('刷新数据失败');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 时间过滤函数
-  const filterByDateRange = (
-    items: RecordRsp[],
-    start?: string,
-    end?: string
-  ): RecordRsp[] => {
-    if (!start && !end) return items;
-
-    let startDate: Date | undefined;
-    let endDate: Date | undefined;
-    if (start) {
-      startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-    }
-    if (end) {
-      endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-    }
-
-    return items.filter(record =>
-      isDateInRange(record.created_at, startDate, endDate)
-    );
-  };
-
-  const getFilteredAndSortedRecords = () => {
-    if (!records || !Array.isArray(records) || records.length === 0) {
-      return [];
-    }
-
-    let filtered = records.filter(record =>
-      record.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    if (dateRange.start || dateRange.end) {
-      filtered = filterByDateRange(filtered, dateRange.start, dateRange.end);
-    }
-
-    return filtered.sort((a, b) => {
-      const timeA =
-        a.hour * 3600 + a.minute * 60 + a.second + a.microsecond / 1000;
-      const timeB =
-        b.hour * 3600 + b.minute * 60 + b.second + b.microsecond / 1000;
-      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
-    });
-  };
-
-  const toggleSort = () =>
-    setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
-
-  const formatTime = (record: RecordRsp) => {
-    const hours = record.hour.toString().padStart(2, '0');
-    const minutes = record.minute.toString().padStart(2, '0');
-    const seconds = record.second.toString().padStart(2, '0');
-    const milliseconds = Math.floor(record.microsecond)
-      .toString()
-      .padStart(3, '0');
-    return `${hours}:${minutes}:${seconds}.${milliseconds}`;
-  };
-
-  const handleDateChange = (field: 'start' | 'end', value: string) => {
-    setDateRange(prevState => newDateChange(prevState, field, value));
-  };
+  const handleDateChange = (field: 'start' | 'end', value: string) =>
+    setDateRange(prev => newDateChange(prev, field, value));
 
   const clearFilters = () => {
     setSearchTerm('');
     setDateRange(emptyDateRange);
   };
 
-  const hasActiveFilters = Boolean(
-    searchTerm || dateRange.start || dateRange.end
-  );
-
-  const handleEdit = (record: RecordRsp) => {
-    setEditingRecord(record);
-    setShowEditForm(true);
-  };
-
-  const handleCancelEdit = () => {
-    setShowEditForm(false);
-    setEditingRecord(null);
-  };
-
-  const handleOpenDeleteModal = (record: RecordRsp) => {
-    setRecordToDelete(record);
-    setShowDeleteModal(true);
-  };
+  const toggleSort = () =>
+    setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
 
   const handleConfirmDelete = async () => {
-    if (!recordToDelete) return;
-
+    if (modal?.type !== 'delete') return;
     try {
-      setLoading(true);
-      const response = await deleteRecord({ ids: [recordToDelete.id] });
-      if (response.code !== 0) {
-        setError(response.msg || '删除失败');
-        return;
-      }
-      await fetchRecords();
+      const res = await deleteRecord({ ids: [modal.record.id] });
+      if (res.code === 0) await mutate();
     } catch (err) {
-      setError('删除记录失败');
-      console.error(err);
+      console.error('Delete error:', err);
     } finally {
-      setLoading(false);
-      setShowDeleteModal(false);
-      setRecordToDelete(null);
+      setModal(null);
     }
   };
 
-  const handleCancelDelete = () => {
-    setShowDeleteModal(false);
-    setRecordToDelete(null);
-  };
+  if (error)
+    return <ErrorDisplay message="加载成绩失败" onRetry={() => mutate()} />;
 
-  const sortedRecords = getFilteredAndSortedRecords();
-
-  if (error) {
-    return <ErrorDisplay message={error} onRetry={fetchRecords} />;
-  }
+  const hasActiveFilters = Boolean(
+    searchTerm || dateRange.start || dateRange.end
+  );
 
   return (
     <>
@@ -198,7 +120,7 @@ export default function GameRecordsClient({
         </div>
         <button
           className="absolute right-0 btn btn-primary btn-sm md:btn-md"
-          onClick={() => setShowCreateForm(true)}
+          onClick={() => setModal({ type: 'create' })}
         >
           <FaPlus className="w-5 h-5 mr-2" />
           添加成绩
@@ -216,9 +138,9 @@ export default function GameRecordsClient({
           hasActiveFilters={hasActiveFilters}
           onViewModeChange={setViewMode}
           viewMode={viewMode}
-          totalItems={sortedRecords.length}
-          onRefresh={fetchRecords}
-          loading={loading}
+          totalItems={filteredRecords.length}
+          onRefresh={mutate}
+          loading={isLoading}
         />
       </div>
 
@@ -232,7 +154,7 @@ export default function GameRecordsClient({
         hasActiveFilters={hasActiveFilters}
       />
 
-      {sortedRecords.length === 0 ? (
+      {filteredRecords.length === 0 ? (
         <EmptyState onClearFilters={clearFilters} />
       ) : (
         <div className="overflow-x-auto">
@@ -256,7 +178,7 @@ export default function GameRecordsClient({
               </tr>
             </thead>
             <tbody className="text-center">
-              {sortedRecords.map((record, index) => (
+              {filteredRecords.map((record, index) => (
                 <tr key={record.id}>
                   <td>
                     <div className="badge badge-primary badge-outline">
@@ -270,14 +192,14 @@ export default function GameRecordsClient({
                     <div className="flex space-x-2 justify-center">
                       <button
                         className="btn btn-sm btn-outline btn-info"
-                        onClick={() => handleEdit(record)}
+                        onClick={() => setModal({ type: 'edit', record })}
                         title="编辑"
                       >
                         <FaEdit className="w-3 h-3" />
                       </button>
                       <button
                         className="btn btn-sm btn-outline btn-error"
-                        onClick={() => handleOpenDeleteModal(record)}
+                        onClick={() => setModal({ type: 'delete', record })}
                         title="删除"
                       >
                         <FaTrash className="w-3 h-3" />
@@ -291,33 +213,34 @@ export default function GameRecordsClient({
         </div>
       )}
 
-      {showCreateForm && (
+      {/* Modals */}
+      {modal?.type === 'create' && (
         <CreateRecord
-          onClose={() => setShowCreateForm(false)}
+          onClose={() => setModal(null)}
           gameId={gameId}
-          onSuccess={fetchRecords}
+          onSuccess={() => mutate()}
         />
       )}
-
-      {showEditForm && editingRecord && (
+      {modal?.type === 'edit' && (
         <EditRecord
-          isOpen={showEditForm}
-          onClose={handleCancelEdit}
-          record={editingRecord}
-          onSuccess={fetchRecords}
+          isOpen
+          onClose={() => setModal(null)}
+          record={modal.record}
+          onSuccess={() => mutate()}
         />
       )}
-
-      <DeleteConfirmationModal
-        isOpen={showDeleteModal}
-        onClose={handleCancelDelete}
-        onConfirm={handleConfirmDelete}
-        itemName={recordToDelete?.name}
-        title="确认删除成绩"
-        message="此操作无法撤销，成绩将永久删除。"
-        confirmText="确认删除"
-        cancelText="取消"
-      />
+      {modal?.type === 'delete' && (
+        <DeleteConfirmationModal
+          isOpen
+          onClose={() => setModal(null)}
+          onConfirm={handleConfirmDelete}
+          itemName={modal.record.name}
+          title="确认删除成绩"
+          message="此操作无法撤销，成绩将永久删除。"
+          confirmText="确认删除"
+          cancelText="取消"
+        />
+      )}
     </>
   );
 }
