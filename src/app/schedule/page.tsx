@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-18 17:34:36
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-22 16:49:11
+ * @LastEditTime: 2025-11-29 18:53:06
  * @FilePath: src/app/schedule/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -23,7 +23,7 @@ import {
   FaTimes,
 } from 'react-icons/fa';
 import { BiDumbbell } from 'react-icons/bi';
-import { SportTypeOptions } from '@/data/sport-type';
+import { useEvents } from '@/hooks/useEvents';
 
 // 默认选中 5km（value = 10）
 const DEFAULT_SPORT_VALUE = 10;
@@ -142,6 +142,12 @@ const isWeekend = (date: Date): boolean => {
 const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 export default function RunningSchedulePage() {
+  const {
+    events: SportTypeOptions,
+    loading: eventsLoading,
+    error: eventsError,
+  } = useEvents();
+
   // 状态
   const [monday, setMonday] = useState<Date>(() => getMonday(new Date()));
   const [sportTypeValue, setSportTypeValue] =
@@ -159,8 +165,8 @@ export default function RunningSchedulePage() {
       } catch {}
     }
     const distance =
-      SportTypeOptions.find(opt => opt.value === DEFAULT_SPORT_VALUE)
-        ?.distance || 5000;
+      SportTypeOptions.find(opt => opt.id === DEFAULT_SPORT_VALUE)?.distance ||
+      5000;
     return generatePlans(distance);
   });
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -193,14 +199,14 @@ export default function RunningSchedulePage() {
     let sportVal = DEFAULT_SPORT_VALUE;
     if (sportParam) {
       const parsed = parseInt(sportParam, 10);
-      if (SportTypeOptions.some(opt => opt.value === parsed)) {
+      if (SportTypeOptions.some(opt => opt.id === parsed)) {
         sportVal = parsed;
       }
     } else {
       const savedSport = localStorage.getItem(SPORT_TYPE_KEY);
       if (savedSport) {
         const parsed = parseInt(savedSport, 10);
-        if (SportTypeOptions.some(opt => opt.value === parsed)) {
+        if (SportTypeOptions.some(opt => opt.id === parsed)) {
           sportVal = parsed;
         }
       }
@@ -225,7 +231,7 @@ export default function RunningSchedulePage() {
       }
       // 否则用默认
       const distance =
-        SportTypeOptions.find(opt => opt.value === sportTypeValue)?.distance ||
+        SportTypeOptions.find(opt => opt.id === sportTypeValue)?.distance ||
         5000;
       setCustomPlans(generatePlans(distance));
     };
@@ -319,8 +325,8 @@ export default function RunningSchedulePage() {
               onChange={handleSportChange}
             >
               {SportTypeOptions.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                <option key={opt.id} value={opt.id}>
+                  {opt.name}
                 </option>
               ))}
             </select>

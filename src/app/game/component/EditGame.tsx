@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 14:59:00
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-28 11:16:26
+ * @LastEditTime: 2025-11-29 18:47:13
  * @FilePath: src/app/game/component/EditGame.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -12,8 +12,8 @@ import React, { useState, useEffect } from 'react';
 import { GameEditReq, GameWebViewRsp } from '@/api/model';
 import { editGame } from '@/api/game';
 import { FaTimes, FaSave } from 'react-icons/fa';
-import { SportTypeOptions } from '@/data/sport-type';
 import { KeyedMutator } from 'swr';
+import { useEvents } from '@/hooks/useEvents';
 
 interface EditGameProps {
   game: GameWebViewRsp;
@@ -28,6 +28,8 @@ const EditGame: React.FC<EditGameProps> = ({ game, mutate, onClose }) => {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const { events, loading: eventsLoading, error: eventsError } = useEvents();
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -101,6 +103,14 @@ const EditGame: React.FC<EditGameProps> = ({ game, mutate, onClose }) => {
     }
   };
 
+  if (eventsLoading) {
+    return <span className={`badge badge-ghost`}>加载运动类型中...</span>;
+  }
+
+  if (eventsError) {
+    return <span className={`badge badge-error`}>加载运动类型失败</span>;
+  }
+
   return (
     <div className="modal modal-open">
       <div className="modal-box max-w-2xl">
@@ -147,9 +157,9 @@ const EditGame: React.FC<EditGameProps> = ({ game, mutate, onClose }) => {
               className={`select select-bordered w-full ${errors.type ? 'select-error' : ''}`}
               disabled={loading}
             >
-              {SportTypeOptions.map(type => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
+              {events.map(type => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
                 </option>
               ))}
             </select>

@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 19:57:40
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-28 11:10:45
+ * @LastEditTime: 2025-11-29 18:47:00
  * @FilePath: src/app/game/component/CreateGame.tsx
  * @Description: 创建比赛
  */
@@ -12,8 +12,8 @@
 import React, { useState } from 'react';
 import { GameCreateReq, GameWebViewRsp } from '@/api/model';
 import { createGame } from '@/api/game';
-import { SportTypeOptions } from '@/data/sport-type';
 import { KeyedMutator } from 'swr';
+import { useEvents } from '@/hooks/useEvents';
 
 interface CreateGameProps {
   mutate: KeyedMutator<GameWebViewRsp[]>;
@@ -27,6 +27,8 @@ const CreateGame: React.FC<CreateGameProps> = ({ mutate, onClose }) => {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const { events, loading: eventsLoading, error: eventsError } = useEvents();
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -90,6 +92,14 @@ const CreateGame: React.FC<CreateGameProps> = ({ mutate, onClose }) => {
     }
   };
 
+  if (eventsLoading) {
+    return <span className={`badge badge-ghost`}>加载运动类型中...</span>;
+  }
+
+  if (eventsError) {
+    return <span className={`badge badge-error`}>加载运动类型失败</span>;
+  }
+
   return (
     <div className="modal modal-open">
       <div className="modal-box max-w-2xl">
@@ -128,9 +138,9 @@ const CreateGame: React.FC<CreateGameProps> = ({ mutate, onClose }) => {
               <option value={-1} disabled>
                 请选择比赛类型
               </option>
-              {SportTypeOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+              {events.map(option => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
                 </option>
               ))}
             </select>

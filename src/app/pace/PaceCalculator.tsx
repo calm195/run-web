@@ -2,15 +2,14 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 17:16:41
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-22 17:55:47
+ * @LastEditTime: 2025-11-29 18:54:43
  * @FilePath: src/app/pace/PaceCalculator.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
 'use client';
 
-import { useMemo, useState } from 'react';
-import { SportTypeOptions } from '@/data/sport-type';
+import React, { useMemo, useState } from 'react';
 import { FaClock, FaTachometerAlt } from 'react-icons/fa';
 import ModeToggle from '@/app/pace/component/ModeToggle';
 import UnitToggle from '@/app/pace/component/UnitToggle';
@@ -18,6 +17,7 @@ import DistanceInput from '@/app/pace/component/DistanceInput';
 import TimeInput from '@/app/pace/component/TimeInput';
 import PaceInput from '@/app/pace/component/PaceInput';
 import ResultDisplay from '@/app/pace/component/ResultDisplay';
+import { useEvents } from '@/hooks/useEvents';
 
 export type PaceCalculatorResult = {
   paceMsPerKm: number;
@@ -29,6 +29,8 @@ export type PaceCalculatorResult = {
 };
 
 const PaceCalculator = () => {
+  const { events, loading: eventsLoading, error: eventsError } = useEvents();
+
   const [mode, setMode] = useState<'timeToPace' | 'paceToTime'>('timeToPace');
   const [unit, setUnit] = useState<'km' | 'mile'>('km');
   const [distanceKm, setDistanceKm] = useState<string>('5');
@@ -116,11 +118,23 @@ const PaceCalculator = () => {
       formatPaceDisplay,
       formatTimeDisplay,
     };
-  }, [mode, distanceKm, h, m, s, ms, paceMin, paceSec, paceMs]);
+  }, [
+    distanceKm,
+    mode,
+    formatPaceDisplay,
+    formatTimeDisplay,
+    h,
+    m,
+    s,
+    ms,
+    paceMin,
+    paceSec,
+    paceMs,
+  ]);
 
   // ====== 快捷距离 ======
-  const commonDistances = SportTypeOptions.map(opt => ({
-    label: opt.label,
+  const commonDistances = events.map(opt => ({
+    label: opt.name,
     km: opt.distance / 1000,
   }));
 
@@ -130,6 +144,14 @@ const PaceCalculator = () => {
 
   const displayDistance =
     unit === 'km' ? distanceKm : (parseFloat(distanceKm) / 1.609344).toFixed(3);
+
+  if (eventsLoading) {
+    return <span className={`badge badge-ghost`}>加载运动类型中...</span>;
+  }
+
+  if (eventsError) {
+    return <span className={`badge badge-error`}>加载运动类型失败</span>;
+  }
 
   return (
     <div className="card bg-base-100 shadow-xl w-full">
