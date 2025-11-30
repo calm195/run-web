@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 14:59:00
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-29 18:47:13
+ * @LastEditTime: 2025-11-30 16:10:11
  * @FilePath: src/app/game/component/EditGame.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -14,6 +14,7 @@ import { editGame } from '@/api/game';
 import { FaTimes, FaSave } from 'react-icons/fa';
 import { KeyedMutator } from 'swr';
 import { useEvents } from '@/hooks/useEvents';
+import toast from 'react-hot-toast';
 
 interface EditGameProps {
   game: GameWebViewRsp;
@@ -80,9 +81,15 @@ const EditGame: React.FC<EditGameProps> = ({ game, mutate, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading) return;
+    if (loading) {
+      toast.loading('正在加载运动项目信息');
+      return;
+    }
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      toast.error('比赛编辑表单校验失败');
+      return;
+    }
 
     setLoading(true);
 
@@ -96,8 +103,9 @@ const EditGame: React.FC<EditGameProps> = ({ game, mutate, onClose }) => {
       await editGame(editData);
       await mutate();
       onClose();
-    } catch (err) {
-      console.error('更新比赛失败:', err);
+      toast.success('更新比赛成功');
+    } catch {
+      toast.error('更新比赛失败');
     } finally {
       setLoading(false);
     }

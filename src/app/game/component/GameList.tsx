@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:36:38
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-28 11:18:25
+ * @LastEditTime: 2025-11-30 16:01:46
  * @FilePath: src/app/game/component/GameList.tsx
  * @Description: 比赛列表
  */
@@ -22,6 +22,7 @@ import ActiveFilterDisplay from '@/components/ActiveFilterDisplay';
 import SearchFilterSection from '@/components/SearchFilterSection';
 import { DateRange, emptyDateRange, newDateChange } from '@/utils/time';
 import { useFilteredGames } from '@/hooks/useFilteredGames';
+import toast from 'react-hot-toast';
 
 const fetchGames = () => listGames().then(res => res.data || []);
 
@@ -51,6 +52,7 @@ export default function GameWebViewList() {
   const clearFilters = () => {
     setSearchTerm('');
     setDateRange(emptyDateRange);
+    toast.success('清除搜索条件');
   };
 
   const hasActiveFilters = Boolean(
@@ -59,7 +61,17 @@ export default function GameWebViewList() {
 
   // 如果有错误，显示错误组件
   if (error) {
-    return <ErrorDisplay message="加载比赛失败" onRetry={() => mutate()} />;
+    return (
+      <ErrorDisplay
+        message="加载比赛失败"
+        onRetry={async () => {
+          const success = await mutate();
+          if (success) {
+            toast.success('数据刷新成功！');
+          }
+        }}
+      />
+    );
   }
 
   return (

@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-21 20:13:45
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:46:34
+ * @LastEditTime: 2025-11-30 16:18:36
  * @FilePath: src/app/game/[id]/component/EditRecord.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -14,6 +14,7 @@ import { FaTimes, FaEdit } from 'react-icons/fa';
 import { RecordEditReq, RecordRsp } from '@/api/model';
 import { editRecord } from '@/api/record';
 import { convertRfc3339ToDateTimeLocal } from '@/utils/date';
+import toast from 'react-hot-toast';
 
 interface EditRecordModalProps {
   isOpen: boolean;
@@ -96,7 +97,13 @@ export default function EditRecord({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (loading) {
+      toast.loading('正在加载');
+      return;
+    }
+
     if (!validateForm()) {
+      toast.error('成绩编辑表单校验失败');
       return;
     }
 
@@ -114,10 +121,9 @@ export default function EditRecord({
 
       onSuccess();
       onClose();
-    } catch (err) {
-      setErrors({
-        submit: err instanceof Error ? err.message : '更新记录失败',
-      });
+      toast.success('更新成绩成功');
+    } catch {
+      toast.error('更新成绩失败');
     } finally {
       setLoading(false);
     }

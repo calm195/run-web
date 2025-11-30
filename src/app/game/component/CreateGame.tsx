@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 19:57:40
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-29 18:47:00
+ * @LastEditTime: 2025-11-30 16:09:48
  * @FilePath: src/app/game/component/CreateGame.tsx
  * @Description: 创建比赛
  */
@@ -14,6 +14,7 @@ import { GameCreateReq, GameWebViewRsp } from '@/api/model';
 import { createGame } from '@/api/game';
 import { KeyedMutator } from 'swr';
 import { useEvents } from '@/hooks/useEvents';
+import toast from 'react-hot-toast';
 
 interface CreateGameProps {
   mutate: KeyedMutator<GameWebViewRsp[]>;
@@ -73,10 +74,14 @@ const CreateGame: React.FC<CreateGameProps> = ({ mutate, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (loading) return;
+    if (loading) {
+      toast.loading('正在加载运动项目信息');
+      return;
+    }
 
     // 提交前验证
     if (!validateForm()) {
+      toast.error('比赛新建表单校验失败');
       return;
     }
 
@@ -85,8 +90,9 @@ const CreateGame: React.FC<CreateGameProps> = ({ mutate, onClose }) => {
       await createGame(formData);
       await mutate();
       onClose();
-    } catch (error) {
-      console.error('创建比赛失败:', error);
+      toast.success('创建比赛成功');
+    } catch {
+      toast.error('创建比赛失败');
     } finally {
       setLoading(false);
     }

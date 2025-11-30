@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-21 20:13:45
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:46:34
+ * @LastEditTime: 2025-11-30 16:21:37
  * @FilePath: src/app/game/[id]/component/CreateRecord.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import { FaTimes, FaPlus } from 'react-icons/fa';
 import { RecordCreateReq } from '@/api/model';
 import { createRecord } from '@/api/record';
+import toast from 'react-hot-toast';
 
 interface CreateRecordModalProps {
   onClose: () => void;
@@ -91,7 +92,13 @@ export default function CreateRecord({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (loading) {
+      toast.loading('正在加载');
+      return;
+    }
+
     if (!validateForm()) {
+      toast.error('成绩新建表单校验失败');
       return;
     }
 
@@ -114,10 +121,9 @@ export default function CreateRecord({
 
       onSuccess();
       onClose();
-    } catch (err) {
-      setErrors({
-        submit: err instanceof Error ? err.message : '创建记录失败',
-      });
+      toast.success('创建成绩成功');
+    } catch {
+      toast.error('创建成绩失败');
     } finally {
       setLoading(false);
     }

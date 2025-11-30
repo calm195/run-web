@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-19 09:39:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-28 11:25:23
+ * @LastEditTime: 2025-11-30 16:09:16
  * @FilePath: src/app/game/component/GameTable.tsx
  * @Description: 比赛表格
  */
@@ -19,6 +19,7 @@ import Link from 'next/link';
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
 import TypeBadge from '@/components/TypeBadge';
 import { KeyedMutator } from 'swr';
+import toast from 'react-hot-toast';
 
 interface GameWebViewTableProps {
   games: GameWebViewRsp[];
@@ -52,8 +53,9 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
       try {
         await deleteGame({ ids: [gameToDelete.id] });
         await mutate();
-      } catch (error) {
-        console.log(error);
+        toast.success('删除比赛成功');
+      } catch {
+        toast.error('删除比赛失败');
       }
     }
     setIsDeleteModalOpen(false);
@@ -64,6 +66,7 @@ const GameWebViewTable: React.FC<GameWebViewTableProps> = ({
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setGameToDelete(null);
+    toast.success('取消删除');
   };
 
   return (

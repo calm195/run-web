@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 12:08:15
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-30 13:03:16
+ * @LastEditTime: 2025-11-30 16:09:16
  * @FilePath: src/app/game/[id]/GameRecordsClient.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -34,6 +34,7 @@ import EditRecord from '@/app/game/[id]/component/EditRecord';
 import TypeBadge from '@/components/TypeBadge';
 import { useFilteredRecords } from '@/hooks/useFilteredRecords';
 import { useEvents } from '@/hooks/useEvents';
+import toast from 'react-hot-toast';
 
 interface GameRecordsClientProps {
   game: GameWebViewRsp;
@@ -88,6 +89,7 @@ export default function GameRecordsClient({
   const clearFilters = () => {
     setSearchTerm('');
     setDateRange(emptyDateRange);
+    toast.success('清除搜索条件');
   };
 
   const toggleSort = () =>
@@ -98,15 +100,27 @@ export default function GameRecordsClient({
     try {
       const res = await deleteRecord({ ids: [modal.record.id] });
       if (res.code === 0) await mutate();
-    } catch (err) {
-      console.error('Delete error:', err);
+      toast.success('删除成绩成功');
+    } catch {
+      toast.error('删除成绩失败');
     } finally {
       setModal(null);
     }
   };
 
-  if (error)
-    return <ErrorDisplay message="加载成绩失败" onRetry={() => mutate()} />;
+  if (error) {
+    return (
+      <ErrorDisplay
+        message="加载成绩失败"
+        onRetry={async () => {
+          const success = await mutate();
+          if (success) {
+            toast.success('数据刷新成功！');
+          }
+        }}
+      />
+    );
+  }
 
   // 加载中
   if (eventsLoading) {
