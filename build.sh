@@ -32,6 +32,10 @@ tar -czf "${PROJECT_NAME}.tar.gz" -C "$DEPLOY_DIR" .
 scp "${PROJECT_NAME}.tar.gz" "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/"
 
 # 6. 在远程执行部署脚本
-ssh "${REMOTE_USER}@${REMOTE_HOST}" "cd ${REMOTE_PATH} && tar -xzf ${PROJECT_NAME}.tar.gz && bash remote-deploy.sh"
+ssh "${REMOTE_USER}@${REMOTE_HOST}" "cd ${REMOTE_PATH} && tar -xzf ${PROJECT_NAME}.tar.gz && bash deploy.sh"
+
+# 7. 删除构建产物
+rm -rf "$DEPLOY_DIR"
+rm "${PROJECT_NAME}.tar.gz"
 
 echo "✅ 部署完成！"
