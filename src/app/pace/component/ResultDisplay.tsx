@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 17:20:27
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-22 17:55:47
+ * @LastEditTime: 2025-11-30 12:23:53
  * @FilePath: src/app/pace/component/ResultDisplay.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -33,7 +33,7 @@ const ResultDisplay: FC<ResultDisplayProps> = ({ mode, unit, result }) => {
             </div>
             <div className="text-lg font-mono">
               {mode === 'timeToPace'
-                ? `${result.formatPaceDisplay(result.paceMsPerKm)} /${unit === 'km' ? 'km' : 'mi'}`
+                ? `${result.formatPaceDisplay(unit === 'km' ? result.paceMsPerKm : result.paceMsPerMile)} /${unit === 'km' ? 'km' : 'mi'}`
                 : result.formatTimeDisplay(result.totalTimeMs)}
             </div>
           </div>

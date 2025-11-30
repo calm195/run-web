@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 12:08:15
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-28 11:21:08
+ * @LastEditTime: 2025-11-30 12:35:41
  * @FilePath: src/app/game/[id]/GameRecordsClient.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -15,7 +15,13 @@ import { deleteRecord, listRecordResults } from '@/api/record';
 import EmptyState from '@/components/EmptyState';
 import ErrorDisplay from '@/components/ErrorDisplay';
 import SearchFilterSection from '@/components/SearchFilterSection';
-import { DateRange, emptyDateRange, newDateChange } from '@/utils/time';
+import {
+  DateRange,
+  emptyDateRange,
+  formatTimeDisplay,
+  getTotalTimeMs,
+  newDateChange,
+} from '@/utils/time';
 import { formatDateTime } from '@/utils/date';
 import ActiveFilterDisplay from '@/components/ActiveFilterDisplay';
 import Link from 'next/link';
@@ -35,12 +41,6 @@ interface GameRecordsClientProps {
 
 const fetchRecords = (gameId: number) =>
   listRecordResults({ id: gameId }).then(res => res.data || []);
-
-const formatTime = (record: RecordRsp) => {
-  const pad = (n: number) => n.toString().padStart(2, '0');
-  const ms = Math.floor(record.microsecond).toString().padStart(3, '0');
-  return `${pad(record.hour)}:${pad(record.minute)}:${pad(record.second)}.${ms}`;
-};
 
 export default function GameRecordsClient({
   game,
@@ -186,7 +186,16 @@ export default function GameRecordsClient({
                     </div>
                   </td>
                   <td>{record.name}</td>
-                  <td className="font-mono">{formatTime(record)}</td>
+                  <td className="font-mono">
+                    {formatTimeDisplay(
+                      getTotalTimeMs(
+                        record.hour,
+                        record.minute,
+                        record.second,
+                        record.microsecond
+                      )
+                    )}
+                  </td>
                   <td className="font-mono">{formatDateTime(record.finish)}</td>
                   <td>
                     <div className="flex space-x-2 justify-center">

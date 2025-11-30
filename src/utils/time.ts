@@ -2,26 +2,43 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 20:38:58
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-27 17:18:25
+ * @LastEditTime: 2025-11-30 12:35:11
  * @FilePath: src/utils/time.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
-import { RecordRsp } from '@/api/model';
 
 export interface DateRange {
   start: string;
   end: string;
 }
 
-export function formatTime(record: RecordRsp): string {
-  if (record.hour > 0) {
-    return `${record.hour}小时${record.minute}分${record.second}秒`;
-  } else if (record.minute > 0) {
-    return `${record.minute}分${record.second}秒`;
-  } else {
-    return `${record.second}.${Math.floor(record.microsecond / 100000)}秒`;
+const pad = (num: number, size: number): string =>
+  num.toString().padStart(size, '0');
+
+const formatMs = (ms: number): string => pad(ms, 3);
+const formatSec = (s: number): string => pad(s, 2);
+
+export const formatPaceDisplay = (totalMs: number): string => {
+  const min = Math.floor(totalMs / 60000);
+  const sec = Math.floor((totalMs % 60000) / 1000);
+  const milliseconds = totalMs % 1000;
+  return `${min}:${formatSec(sec)}.${formatMs(milliseconds)}`;
+};
+
+export const formatTimeDisplay = (totalMs: number): string => {
+  const hours = Math.floor(totalMs / 3600000);
+  const minutes = Math.floor((totalMs % 3600000) / 60000);
+  const seconds = Math.floor((totalMs % 60000) / 1000);
+  const milliseconds = totalMs % 1000;
+
+  if (hours > 0) {
+    return `${hours}:${formatSec(minutes)}:${formatSec(seconds)}.${formatMs(milliseconds)}`;
   }
-}
+  if (minutes > 0) {
+    return `${minutes}:${formatSec(seconds)}.${formatMs(milliseconds)}`;
+  }
+  return `${formatSec(seconds)}.${formatMs(milliseconds)}`;
+};
 
 export function formatTimeToHMS(seconds: number): string {
   if (isNaN(seconds) || seconds < 0) {
@@ -30,16 +47,20 @@ export function formatTimeToHMS(seconds: number): string {
 
   const totalMs = Math.round(seconds * 1000); // 转为毫秒，避免浮点误差
 
-  const hours = Math.floor(totalMs / (3600 * 1000));
-  const minutes = Math.floor((totalMs % (3600 * 1000)) / (60 * 1000));
-  const secs = Math.floor((totalMs % (60 * 1000)) / 1000);
-  const millis = totalMs % 1000;
+  return formatTimeDisplay(totalMs);
+}
 
-  return `${hours.toString().padStart(2, '0')}:${minutes
-    .toString()
-    .padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${millis
-    .toString()
-    .padStart(3, '0')}`;
+export function getTotalTimeMs(
+  h: number | string,
+  m: number | string,
+  s: number | string,
+  ms: number | string
+): number {
+  if (typeof h === 'string') h = parseInt(h);
+  if (typeof m === 'string') m = parseInt(m);
+  if (typeof s === 'string') s = parseInt(s);
+  if (typeof ms === 'string') ms = parseInt(ms);
+  return (h || 0) * 3600000 + (m || 0) * 60000 + (s || 0) * 1000 + (ms || 0);
 }
 
 export function newDateChange(

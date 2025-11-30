@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 17:16:41
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-29 18:54:43
+ * @LastEditTime: 2025-11-30 12:35:11
  * @FilePath: src/app/pace/PaceCalculator.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -18,9 +18,15 @@ import TimeInput from '@/app/pace/component/TimeInput';
 import PaceInput from '@/app/pace/component/PaceInput';
 import ResultDisplay from '@/app/pace/component/ResultDisplay';
 import { useEvents } from '@/hooks/useEvents';
+import {
+  formatPaceDisplay,
+  formatTimeDisplay,
+  getTotalTimeMs,
+} from '@/utils/time';
 
 export type PaceCalculatorResult = {
   paceMsPerKm: number;
+  paceMsPerMile: number;
   totalTimeMs: number;
   speedKmph: number;
   speedMph: number;
@@ -29,6 +35,7 @@ export type PaceCalculatorResult = {
 };
 
 const PaceCalculator = () => {
+  const KM_PER_MILE = 1.609344;
   const { events, loading: eventsLoading, error: eventsError } = useEvents();
 
   const [mode, setMode] = useState<'timeToPace' | 'paceToTime'>('timeToPace');
@@ -46,47 +53,13 @@ const PaceCalculator = () => {
   const [paceSec, setPaceSec] = useState<string>('0');
   const [paceMs, setPaceMs] = useState<string>('000');
 
-  // ====== 工具函数（内联在 useMemo 中，或提取为纯函数）======
-  const pad = (num: number, size: number): string =>
-    num.toString().padStart(size, '0');
-  const formatMs = (ms: number) => pad(ms, 3);
-  const formatSec = (s: number) => pad(s, 2);
-
-  const formatPaceDisplay = (totalMs: number): string => {
-    const min = Math.floor(totalMs / 60000);
-    const sec = Math.floor((totalMs % 60000) / 1000);
-    const milliseconds = totalMs % 1000;
-    return `${min}:${formatSec(sec)}.${formatMs(milliseconds)}`;
-  };
-
-  const formatTimeDisplay = (totalMs: number): string => {
-    const hours = Math.floor(totalMs / 3600000);
-    const minutes = Math.floor((totalMs % 3600000) / 60000);
-    const seconds = Math.floor((totalMs % 60000) / 1000);
-    const milliseconds = totalMs % 1000;
-    if (hours > 0) {
-      return `${hours}:${formatSec(minutes)}:${formatSec(seconds)}.${formatMs(milliseconds)}`;
-    }
-    return `${minutes}:${formatSec(seconds)}.${formatMs(milliseconds)}`;
-  };
-
-  // ====== 核心计算：使用 useMemo ======
   const result = useMemo(() => {
     const distKm = parseFloat(distanceKm);
     if (!distKm || distKm <= 0) return null;
 
-    // 计算总毫秒（时间模式）
-    const getTotalTimeMs = (): number => {
-      return (
-        (parseInt(h) || 0) * 3600000 +
-        (parseInt(m) || 0) * 60000 +
-        (parseInt(s) || 0) * 1000 +
-        (parseInt(ms) || 0)
-      );
-    };
+    const distMiles = distKm / KM_PER_MILE;
 
-    // 计算配速总毫秒（配速模式）
-    const getPaceTotalMs = (): number => {
+    const getTotalPaceMs = (): number => {
       return (
         (parseInt(paceMin) || 0) * 60000 +
         (parseInt(paceSec) || 0) * 1000 +
@@ -95,44 +68,48 @@ const PaceCalculator = () => {
     };
 
     let paceMsPerKm: number | null = null;
+    let paceMsPerMile: number | null = null;
     let totalTimeMs: number | null = null;
 
     if (mode === 'timeToPace') {
-      totalTimeMs = getTotalTimeMs();
+      totalTimeMs = getTotalTimeMs(h, m, s, ms);
       if (!totalTimeMs || totalTimeMs <= 0) return null;
-      paceMsPerKm = totalTimeMs / distKm;
+
+      if (unit === 'km') {
+        paceMsPerKm = totalTimeMs / distKm;
+        paceMsPerMile = paceMsPerKm * KM_PER_MILE;
+      } else {
+        paceMsPerMile = totalTimeMs / distMiles;
+        paceMsPerKm = paceMsPerMile / KM_PER_MILE;
+      }
     } else {
-      paceMsPerKm = getPaceTotalMs();
-      if (!paceMsPerKm || paceMsPerKm <= 0) return null;
+      const inputPaceMs = getTotalPaceMs();
+      if (!inputPaceMs || inputPaceMs <= 0) return null;
+
+      if (unit === 'km') {
+        paceMsPerKm = inputPaceMs;
+        paceMsPerMile = paceMsPerKm * KM_PER_MILE;
+      } else {
+        paceMsPerMile = inputPaceMs;
+        paceMsPerKm = paceMsPerMile / KM_PER_MILE;
+      }
+
       totalTimeMs = paceMsPerKm * distKm;
     }
 
     const speedKmph = paceMsPerKm ? 3600000 / paceMsPerKm : 0;
-    const speedMph = speedKmph / 1.609344;
+    const speedMph = paceMsPerMile ? 3600000 / paceMsPerMile : 0;
 
     return {
       paceMsPerKm,
+      paceMsPerMile,
       totalTimeMs,
       speedKmph,
       speedMph,
       formatPaceDisplay,
       formatTimeDisplay,
     };
-  }, [
-    distanceKm,
-    mode,
-    formatPaceDisplay,
-    formatTimeDisplay,
-    h,
-    m,
-    s,
-    ms,
-    paceMin,
-    paceSec,
-    paceMs,
-  ]);
-
-  // ====== 快捷距离 ======
+  }, [distanceKm, mode, unit, h, m, s, ms, paceMin, paceSec, paceMs]);
   const commonDistances = events.map(opt => ({
     label: opt.name,
     km: opt.distance / 1000,
@@ -146,11 +123,11 @@ const PaceCalculator = () => {
     unit === 'km' ? distanceKm : (parseFloat(distanceKm) / 1.609344).toFixed(3);
 
   if (eventsLoading) {
-    return <span className={`badge badge-ghost`}>加载运动类型中...</span>;
+    return <span className="badge badge-ghost">加载运动类型中...</span>;
   }
 
   if (eventsError) {
-    return <span className={`badge badge-error`}>加载运动类型失败</span>;
+    return <span className="badge badge-error">加载运动类型失败</span>;
   }
 
   return (
