@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-22 12:08:15
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-30 12:35:41
+ * @LastEditTime: 2025-11-30 13:03:16
  * @FilePath: src/app/game/[id]/GameRecordsClient.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -16,6 +16,7 @@ import EmptyState from '@/components/EmptyState';
 import ErrorDisplay from '@/components/ErrorDisplay';
 import SearchFilterSection from '@/components/SearchFilterSection';
 import {
+  calculatePaceMsPerKm,
   DateRange,
   emptyDateRange,
   formatTimeDisplay,
@@ -32,6 +33,7 @@ import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
 import EditRecord from '@/app/game/[id]/component/EditRecord';
 import TypeBadge from '@/components/TypeBadge';
 import { useFilteredRecords } from '@/hooks/useFilteredRecords';
+import { useEvents } from '@/hooks/useEvents';
 
 interface GameRecordsClientProps {
   game: GameWebViewRsp;
@@ -58,6 +60,8 @@ export default function GameRecordsClient({
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
   });
+  const { events, loading: eventsLoading, error: eventsError } = useEvents();
+  const distance: number = events.find(e => e.id === game.type)?.distance || -1;
 
   const [modal, setModal] = useState<
     | { type: 'create' }
@@ -103,6 +107,16 @@ export default function GameRecordsClient({
 
   if (error)
     return <ErrorDisplay message="加载成绩失败" onRetry={() => mutate()} />;
+
+  // 加载中
+  if (eventsLoading) {
+    return <span className={`badge badge-ghost`}>加载中...</span>;
+  }
+
+  // 加载错误
+  if (eventsError) {
+    return <span className={`badge badge-error`}>加载失败</span>;
+  }
 
   const hasActiveFilters = Boolean(
     searchTerm || dateRange.start || dateRange.end
@@ -173,50 +187,71 @@ export default function GameRecordsClient({
                     完成用时 {sortOrder === 'asc' ? '↑' : '↓'}
                   </button>
                 </th>
+                <th>
+                  <button className="btn btn-ghost" onClick={toggleSort}>
+                    配速 {sortOrder === 'asc' ? '↑' : '↓'}
+                  </button>
+                </th>
                 <th>完成时间</th>
                 <th>操作</th>
               </tr>
             </thead>
             <tbody className="text-center">
-              {filteredRecords.map((record, index) => (
-                <tr key={record.id}>
-                  <td>
-                    <div className="badge badge-primary badge-outline">
-                      {index + 1}
-                    </div>
-                  </td>
-                  <td>{record.name}</td>
-                  <td className="font-mono">
-                    {formatTimeDisplay(
-                      getTotalTimeMs(
-                        record.hour,
-                        record.minute,
-                        record.second,
-                        record.microsecond
-                      )
-                    )}
-                  </td>
-                  <td className="font-mono">{formatDateTime(record.finish)}</td>
-                  <td>
-                    <div className="flex space-x-2 justify-center">
-                      <button
-                        className="btn btn-sm btn-outline btn-info"
-                        onClick={() => setModal({ type: 'edit', record })}
-                        title="编辑"
-                      >
-                        <FaEdit className="w-3 h-3" />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline btn-error"
-                        onClick={() => setModal({ type: 'delete', record })}
-                        title="删除"
-                      >
-                        <FaTrash className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {filteredRecords.map((record, index) => {
+                const totalTimeMs = getTotalTimeMs(
+                  record.hour,
+                  record.minute,
+                  record.second,
+                  record.microsecond
+                );
+
+                const paceMsPerKm =
+                  distance > 0
+                    ? calculatePaceMsPerKm(totalTimeMs, distance)
+                    : 0;
+
+                return (
+                  <tr key={record.id}>
+                    <td>
+                      <div className="badge badge-primary badge-outline">
+                        {index + 1}
+                      </div>
+                    </td>
+                    <td>{record.name}</td>
+                    <td className="font-mono">
+                      {formatTimeDisplay(totalTimeMs)}
+                    </td>
+                    <td className="font-mono">
+                      {distance > 0 && paceMsPerKm > 0 ? (
+                        formatTimeDisplay(paceMsPerKm)
+                      ) : (
+                        <span className="opacity-60">—</span>
+                      )}
+                    </td>
+                    <td className="font-mono">
+                      {formatDateTime(record.finish)}
+                    </td>
+                    <td>
+                      <div className="flex space-x-2 justify-center">
+                        <button
+                          className="btn btn-sm btn-outline btn-info"
+                          onClick={() => setModal({ type: 'edit', record })}
+                          title="编辑"
+                        >
+                          <FaEdit className="w-3 h-3" />
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline btn-error"
+                          onClick={() => setModal({ type: 'delete', record })}
+                          title="删除"
+                        >
+                          <FaTrash className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

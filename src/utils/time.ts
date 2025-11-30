@@ -2,7 +2,7 @@
  * @Author: kurous wx2178@126.com
  * @Date: 2025-11-20 20:38:58
  * @LastEditors: kurous wx2178@126.com
- * @LastEditTime: 2025-11-30 12:35:11
+ * @LastEditTime: 2025-11-30 13:21:37
  * @FilePath: src/utils/time.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -62,6 +62,15 @@ export function getTotalTimeMs(
   if (typeof ms === 'string') ms = parseInt(ms);
   return (h || 0) * 3600000 + (m || 0) * 60000 + (s || 0) * 1000 + (ms || 0);
 }
+
+export const calculatePaceMsPerKm = (
+  totalTimeMs: number,
+  distanceMeters: number
+): number => {
+  if (distanceMeters <= 0 || totalTimeMs <= 0) return 0;
+  const distanceKm = distanceMeters / 1000;
+  return totalTimeMs / distanceKm;
+};
 
 export function newDateChange(
   dateRange: DateRange,
